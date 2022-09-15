@@ -9,6 +9,8 @@ Android tool which helps you to keep track of future events
 - Generate PDF files from your events to print out
 
 ### Screenshots
+<img src="screenshots.png" />
+
 
 ### Bug reporting
 If you encounter any bugs please open an issue in the repo. Please consider including a logcat/screenshot or screen recording. If you open an issue please also include the app version and android version of your device.
