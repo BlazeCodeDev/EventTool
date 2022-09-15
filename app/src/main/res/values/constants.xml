@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+  ~  */
+  -->
+
+<resources>
+    <string name="FILE_NAME_EXPORT" translatable="false">eventtool_export</string>
+    <string name="GITHUB_SOURCE_URL" translatable="false">https://github.com/BlazeCodeDev/EventTool</string>
+    <string name="GITHUB_RELEASES_URL" translatable="false">https://api.github.com/repos/BlazeCodeDev/EventTool/releases</string>
+
+    <string name="REMINDERS_CHANNEL_ID" translatable="false">REMINDERS_CHANNEL</string>
+
+    <integer name="REMINDER_AMOUNT_HOURS_BEFORE_TIME_READY">2</integer>
+</resources>

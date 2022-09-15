@@ -1,0 +1,114 @@
+<!--
+  ~ /*
+  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+  ~  */
+  -->
+
+<resources>
+    <string name="app_name">EventTool</string>
+    <string name="send_email">Send E-Mail</string>
+    <string name="email_address">E-Mail Address</string>
+
+    <string name="add_event">Add Event</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="close">Close</string>
+    <string name="edit">Edit</string>
+    <string name="none">None</string>
+    <string name="add_event_title">Add %s</string>
+    <string name="edit_event_title">Edit %s</string>
+    <string name="delete_event">Delete Event</string>
+    <string name="cannot_be_undone">This cannot be undone</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="choose_event_type">Choose Event Type</string>
+    <string name="event_type">Event Type</string>
+    <string name="unknown">Unknown</string>
+    <string name="birthday">Birthday</string>
+    <string name="wedding">Wedding</string>
+    <string name="company_event">Corporate Event</string>
+    <string name="club">Club</string>
+    <string name="folkfest">Public Event</string>
+    <string name="rental">Rental</string>
+
+    <string name="date">Date</string>
+
+    <string name="name">Name</string>
+    <string name="names">Names</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+
+    <string name="venue">Venue</string>
+
+    <string name="wish_music">Wish Music</string>
+
+    <string name="comments">Comments</string>
+
+    <string name="times">Times</string>
+    <string name="time_ready">Ready</string>
+    <string name="time_start">Start</string>
+    <string name="time_guests">Guests</string>
+    <string name="time_buffet">Buffet</string>
+    <string name="time_end">End</string>
+
+    <string name="guests">Guests</string>
+    <string name="guests_total">Total</string>
+    <string name="guests_children">Children</string>
+
+    <string name="additions">Additions</string>
+    <string name="fotobox">Fotobox</string>
+    <string name="sparkler">Sparkler</string>
+    <string name="haze">Hazer</string>
+    <string name="ambilights_indoor">Ambilights Indoor</string>
+    <string name="ambilights_outdoor">Ambilight Outdoor</string>
+    <string name="laser">Laser</string>
+    <string name="projector">Projector</string>
+    <string name="canvas">Canvas</string>
+    <string name="mirror_ball">Mirror Ball</string>
+    <string name="moving_head">Moving Lights</string>
+    <string name="video_player">Video Player</string>
+
+    <string name="contact">Contact</string>
+    <string name="email">E-Mail</string>
+    <string name="email_empty">E-Mail is empty</string>
+    <string name="phone">Phone</string>
+    <string name="phone_empty">Phone number is empty</string>
+
+    <string name="error">Error</string>
+    <string name="please_enter_min_req">Please enter at least Name, Venue, Date and one way of contacting</string>
+    <string name="date_is_in_past">The selected date lies in the past</string>
+    <string name="time_is_in_past">The selected time lies in the past</string>
+    <string name="save_anyway">Save Anyway</string>
+
+    <string name="upcoming_events">Upcoming Events</string>
+    <string name="event_details">Event Details</string>
+
+    <string name="settings">Settings</string>
+    <string name="data">Data</string>
+    <string name="export_data">Export Data</string>
+    <string name="export_successful">Export successful</string>
+    <string name="export_error">Export error</string>
+    <string name="import_data">Import Data</string>
+    <string name="import_successful">Import successful</string>
+    <string name="import_error">Import error</string>
+    <string name="import_dialog_message">This will replace all existing data, this cannot be undone</string>
+
+    <string name="notification_title">%1$s in %2$dh</string>
+
+    <string name="general">General</string>
+    <string name="event_reminders">Event reminders</string>
+    <string name="event_reminders_summary">Remind you %sh before time ready</string>
+    <string name="appearance">Appearance</string>
+    <string name="colorful_calendar_days">Colorful calendar days</string>
+    <string name="about">About</string>
+    <string name="source_code">Source code</string>
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="app_version">App version</string>
+
+    <string name="reminders_channel">Reminders</string>
+
+    <string name="update_available">Update %s available</string>
+    <string name="download">Download</string>
+</resources>
