@@ -18,7 +18,6 @@ import android.text.StaticLayout
 import android.text.TextPaint
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.scale
 import com.blazecode.eventtool.MainActivity
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
@@ -26,7 +25,6 @@ import com.blazecode.eventtool.data.PdfLine
 import com.blazecode.eventtool.enums.EventType
 import java.io.File
 import java.io.FileOutputStream
-
 
 class PdfPrinter(val activity: MainActivity) {
 
@@ -57,28 +55,28 @@ class PdfPrinter(val activity: MainActivity) {
 
     private fun drawPdf(uri: Uri){
         // BITMAPS
-        val logo = vectorToBitmap(R.drawable.header).scale(130, 30)
-        val github = vectorToBitmap(R.drawable.ic_github).scale(20, 20)
+        val logo = vectorToBitmap(R.drawable.header)
+        val github = vectorToBitmap(R.drawable.ic_github)
 
         // https://www.geeksforgeeks.org/how-to-generate-a-pdf-file-in-android-app/
         val pdfDocument = PdfDocument()
-        val paint = android.graphics.Paint(Paint.FILTER_BITMAP_FLAG)
+        val paint = android.graphics.Paint()
         val title = TextPaint()
 
-        val pageInfo = PageInfo.Builder(595, 842, 1).create()
+        val pageInfo = PageInfo.Builder(2480, 3508, 1).create()
         val page = pdfDocument.startPage(pageInfo)
         val canvas = page.canvas
 
         // HEADER
         paint.colorFilter = PorterDuffColorFilter(activity.resources.getColor(R.color.pdf_header_tint), PorterDuff.Mode.SRC_IN)
-        canvas.drawBitmap(logo, (297.5f - logo.width / 2), 50f, paint)
+        canvas.drawBitmap(logo, (1240f - logo.width / 2), 200f, paint)
 
-        paint.strokeWidth = 2f          // LINE THICKNESS
-        canvas.drawLine(50f, 100f, 545f, 100f, paint)
+        paint.strokeWidth = 5f          // LINE THICKNESS
+        canvas.drawLine(200f, 400f, 2280f, 400f, paint)
 
         // TEXT
         title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
-        title.textSize = 13f
+        title.textSize = 60f
 
         val lines = mutableListOf<PdfLine>()
         // EVENT TYPE & DATE
@@ -124,28 +122,29 @@ class PdfPrinter(val activity: MainActivity) {
         if(event.email != "") lines.add(PdfLine(activity.resources.getString(R.string.email), event.email))
         if(event.phone != "") lines.add(PdfLine(activity.resources.getString(R.string.phone), event.phone))
 
-        var lastHeight = 140f
+        var lastHeight = 400f
         for ((index, line) in lines.withIndex()){
             title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.ITALIC)
-            canvas.drawText(line.title, 60f, lastHeight + 10f, title)
+            canvas.drawText(line.title, 200f, lastHeight + 165f, title)
 
             canvas.save()
-            canvas.translate(250f, lastHeight - 3.6f)
+            canvas.translate(1000f, lastHeight + 100f)
             title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
-            val staticLayout = StaticLayout.Builder.obtain(line.data, 0, line.data.length, title, 250).build()
+            val staticLayout = StaticLayout.Builder.obtain(line.data, 0, line.data.length, title, 1208).build()
             staticLayout.draw(canvas)
             canvas.restore()
 
             lastHeight += staticLayout.height.toFloat()
+            //canvas.drawText(line.data, 1000f, index * 100f + 600f, title)
         }
 
         // FOOTER
-        canvas.drawLine(50f, 760f, 545f, 760f, paint)
-        canvas.drawBitmap(github, (220f - logo.width / 2), 781f, paint)
+        canvas.drawLine(200f, 3208f, 2280f, 3208f, paint)
+        canvas.drawBitmap(github, (900f - logo.width / 2), 3300f, paint)
         title.typeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL)
-        title.textSize = 11f
+        title.textSize = 40f
         title.textAlign = Paint.Align.CENTER
-        canvas.drawText(activity.resources.getString(R.string.GITHUB_SOURCE_URL), 300f, 795f, title)
+        canvas.drawText(activity.resources.getString(R.string.GITHUB_SOURCE_URL), 1240f, 3350f, title)
 
         pdfDocument.finishPage(page)
 
