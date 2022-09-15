@@ -1,0 +1,51 @@
+<!--
+  ~ /*
+  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+  ~  */
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+  <group
+      android:pivotX="12"
+      android:pivotY="12"
+      android:scaleX="1.2"
+      android:scaleY="1.2">
+
+    <path
+        android:pathData="M9.05,4.85v2.65h2.16v1.82h-2.16v6.1c0,0.42 0.09,0.72 0.28,0.9 0.18,0.18 0.52,0.28 0.99,0.28 0.32,0 0.64,-0.03 0.96,-0.1v1.9c-0.63,0.15 -1.23,0.23 -1.81,0.23 -2.11,0 -3.17,-1.04 -3.17,-3.12v-6.19h-2.01v-1.82h2.01v-2.65h2.75Z">
+      <aapt:attr name="android:fillColor">
+        <gradient
+            android:startX="7.79"
+            android:startY="17.91"
+            android:endX="7.79"
+            android:endY="5.14"
+            android:type="linear">
+          <item android:offset="0" android:color="#FFFF9B2A"/>
+          <item android:offset="0.25" android:color="#FFEE8A1F"/>
+          <item android:offset="1" android:color="#FFBF5A00"/>
+        </gradient>
+      </aapt:attr>
+    </path>
+    <path
+        android:pathData="M14.95,19.18v-2.65h-2.16v-1.82h2.16v-6.1c0,-0.42 -0.09,-0.72 -0.28,-0.9 -0.18,-0.18 -0.52,-0.28 -0.99,-0.28 -0.32,0 -0.64,0.03 -0.96,0.1v-1.9c0.63,-0.15 1.23,-0.23 1.81,-0.23 2.11,0 3.17,1.04 3.17,3.12v6.19h2.01v1.82h-2.01v2.65h-2.75Z">
+      <aapt:attr name="android:fillColor">
+        <gradient
+            android:startX="16.21"
+            android:startY="5.55"
+            android:endX="16.21"
+            android:endY="18.68"
+            android:type="linear">
+          <item android:offset="0" android:color="#FFFF9B2A"/>
+          <item android:offset="1" android:color="#FFBF5A00"/>
+        </gradient>
+      </aapt:attr>
+    </path>
+
+  </group>
+</vector>
