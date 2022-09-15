@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ /*
+  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+  ~  */
+  -->
+
+<resources>
+    <color name="unknown">#00000000</color>
+    <color name="birthday">#66FFE06F</color>
+    <color name="wedding">#669C9C9C</color>
+    <color name="company_event">#66316650</color>
+    <color name="club">#66CB3234</color>
+    <color name="folkfest">#66F75E25</color>
+    <color name="rental">#663498DB</color>
+
+    <color name="unknown_full">#00000000</color>
+    <color name="birthday_full">#FFE07F</color>
+    <color name="wedding_full">#9C9C9C</color>
+    <color name="company_event_full">#316650</color>
+    <color name="club_full">#CB3234</color>
+    <color name="folkfest_full">#F75E25</color>
+    <color name="rental_full">#8D98DB</color>
+
+    <color name="pdf_header_tint">#186497</color>
+</resources>
