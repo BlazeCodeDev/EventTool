@@ -43,11 +43,10 @@ class ReminderManager {
         val HOURS_TO_SUBSTRACT: Long = context.resources.getInteger(R.integer.REMINDER_AMOUNT_HOURS_BEFORE_TIME_READY).toLong()
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val id = if(event.id != null) event.id else 0
         alarmIntent = Intent(context, ReminderBroadcastReceiver::class.java)
             .putExtra("reminderEvent", event as Parcelable)
             .let { intent ->
-            PendingIntent.getBroadcast(context, id!!, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getBroadcast(context, event.id!!, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         Log.i("RECEIVER", "GAVE ${event}")
 
@@ -56,16 +55,5 @@ class ReminderManager {
             LocalDateTime.of(event.date, event.timeReady).minusHours(HOURS_TO_SUBSTRACT).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
             alarmIntent
         )
-    }
-
-    fun delete(context: Context, eventId: Int){
-        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        alarmIntent = Intent(context, ReminderBroadcastReceiver::class.java)
-            .let { intent ->
-                PendingIntent.getBroadcast(context, eventId, intent, PendingIntent.FLAG_IMMUTABLE)
-            }
-
-        alarmManager!!.cancel(alarmIntent)
     }
 }
