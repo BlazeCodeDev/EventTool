@@ -57,4 +57,15 @@ class ReminderManager {
             alarmIntent
         )
     }
+
+    fun delete(context: Context, eventId: Int){
+        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        alarmIntent = Intent(context, ReminderBroadcastReceiver::class.java)
+            .let { intent ->
+                PendingIntent.getBroadcast(context, eventId, intent, PendingIntent.FLAG_IMMUTABLE)
+            }
+
+        alarmManager!!.cancel(alarmIntent)
+    }
 }

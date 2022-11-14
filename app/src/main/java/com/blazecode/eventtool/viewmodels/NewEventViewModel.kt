@@ -39,6 +39,7 @@ class NewEventViewModel(app: Application, val event: Event): AndroidViewModel(ap
     fun deleteEvent(){
         viewModelScope.launch(Dispatchers.IO) {
             repository.deleteEvent(getApplication(), event.id!!)
+            reminderManager.delete(getApplication(), event.id!!)
         }
     }
 }
