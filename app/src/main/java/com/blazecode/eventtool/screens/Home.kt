@@ -379,6 +379,18 @@ fun ListView(eventList: MutableList<Event>){
                                 }
                             }
 
+                            // VENUE & READY TIME
+                            Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                                // VENUE
+                                Box {
+                                    Text(text = item.venue, style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
+                                }
+                                // VENUE & READY TIME TIME
+                                Box (modifier = Modifier.fillMaxWidth(), Alignment.CenterEnd){
+                                    Text(text = "${stringResource(R.string.time_ready)}: ${item.timeReady}", style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
+                                }
+                            }
+
                             // ADDITIONS
                             FlowRow (modifier = Modifier.padding(4.dp)) {
                                 item.additions.forEach {
