@@ -90,49 +90,53 @@ private fun MainLayout(viewModel: NewEventViewModel, navController: NavControlle
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(0.dp,0.dp,0.dp, dimensionResource(R.dimen.fab_height_padding))){
             when (targetState) {
             EventType.WEDDING -> {
-                    DatePickerLayout(viewModel, context)
-                    WeddingNameLayout(viewModel)
-                    VenueLayout(viewModel)
-                    TimePickerLayout(viewModel, context)
-                    GuestAmountLayout(viewModel)
-                    WishMusicLayout(viewModel)
-                    CommentsLayout(viewModel)
-                    AdditionsLayout(viewModel)
-                    ContactLayout(viewModel)
-                    if(viewModel.editMode) DeleteLayout(viewModel, navController)
+                DatePickerLayout(viewModel, context)
+                WeddingNameLayout(viewModel)
+                VenueLayout(viewModel)
+                TimePickerLayout(viewModel, context)
+                GuestAmountLayout(viewModel)
+                WishMusicLayout(viewModel)
+                CommentsLayout(viewModel)
+                AdditionsLayout(viewModel)
+                ContactLayout(viewModel)
+                if(viewModel.editMode) DeleteLayout(viewModel, navController)
             }
             EventType.CLUB, EventType.FOLKFEST -> {
-                    DatePickerLayout(viewModel, context)
-                    SimpleNameLayout(viewModel)
-                    VenueLayout(viewModel)
-                    TimePickerLayout(viewModel, context)
-                    WishMusicLayout(viewModel)
-                    CommentsLayout(viewModel)
-                    AdditionsLayout(viewModel)
-                    ContactLayout(viewModel)
-                    if(viewModel.editMode) DeleteLayout(viewModel, navController)
+                DatePickerLayout(viewModel, context)
+                SimpleNameLayout(viewModel)
+                VenueLayout(viewModel)
+                TimePickerLayout(viewModel, context)
+                WishMusicLayout(viewModel)
+                CommentsLayout(viewModel)
+                AdditionsLayout(viewModel)
+                ContactLayout(viewModel)
+                if(viewModel.editMode) DeleteLayout(viewModel, navController)
             }
             EventType.RENTAL -> {
-                    DatePickerLayout(viewModel, context)
-                    SimpleNameLayout(viewModel)
-                    VenueLayout(viewModel)
-                    TimePickerLayout(viewModel, context)
-                    CommentsLayout(viewModel)
-                    AdditionsLayout(viewModel)
-                    ContactLayout(viewModel)
-                    if(viewModel.editMode) DeleteLayout(viewModel, navController)
+                DatePickerLayout(viewModel, context)
+                SimpleNameLayout(viewModel)
+                VenueLayout(viewModel)
+                TimePickerLayout(viewModel, context)
+                CommentsLayout(viewModel)
+                AdditionsLayout(viewModel)
+                ContactLayout(viewModel)
+                if(viewModel.editMode) DeleteLayout(viewModel, navController)
+            }
+            EventType.RESERVED -> {
+                CommentsLayout(viewModel)
+                if(viewModel.editMode) DeleteLayout(viewModel, navController)
             }
             else -> {
-                    DatePickerLayout(viewModel, context)
-                    SimpleNameLayout(viewModel)
-                    VenueLayout(viewModel)
-                    TimePickerLayout(viewModel, context)
-                    GuestAmountLayout(viewModel)
-                    WishMusicLayout(viewModel)
-                    CommentsLayout(viewModel)
-                    AdditionsLayout(viewModel)
-                    ContactLayout(viewModel)
-                    if(viewModel.editMode) DeleteLayout(viewModel, navController)
+                DatePickerLayout(viewModel, context)
+                SimpleNameLayout(viewModel)
+                VenueLayout(viewModel)
+                TimePickerLayout(viewModel, context)
+                GuestAmountLayout(viewModel)
+                WishMusicLayout(viewModel)
+                CommentsLayout(viewModel)
+                AdditionsLayout(viewModel)
+                ContactLayout(viewModel)
+                if(viewModel.editMode) DeleteLayout(viewModel, navController)
             }
         }
         }
@@ -633,7 +637,9 @@ private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
     if(save.value){
         // INPUT RULES
         if((viewModel.event.date != LocalDate.now() && (viewModel.event.name.isNotEmpty() || viewModel.event.lastName.isNotEmpty()) &&
-                    viewModel.event.venue.isNotEmpty() && (viewModel.event.email.isNotEmpty() || viewModel.event.phone.isNotEmpty()))) {
+            viewModel.event.venue.isNotEmpty() && (viewModel.event.email.isNotEmpty() || viewModel.event.phone.isNotEmpty())) ||
+            viewModel.event.eventType == EventType.RESERVED) {
+
             viewModel.saveEvent()
             navController.popBackStack()
         } else {
