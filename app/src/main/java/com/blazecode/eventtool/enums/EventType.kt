@@ -8,6 +8,7 @@ package com.blazecode.eventtool.enums
 
 enum class EventType {
     UNKNOWN,
+    RESERVED,
     BIRTHDAY,
     WEDDING,
     COMPANY_EVENT,

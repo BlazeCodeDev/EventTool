@@ -358,10 +358,17 @@ fun ListView(eventList: MutableList<Event>){
                                         modifier = Modifier.padding(8.dp))
                                 }
                                 // NAME
-                                Box (modifier = Modifier.fillMaxWidth().padding(0.dp,0.dp,40.dp,0.dp), contentAlignment = Alignment.Center){
-                                    val name = if(item.eventType == EventType.WEDDING) "${item.firstName1} / ${item.firstName2} ${item.lastName}" else item.name
-                                    Text(text = name, style = Typography.titleLarge, modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp))
+                                if(item.eventType != EventType.RESERVED){
+                                    Box (modifier = Modifier.fillMaxWidth().padding(0.dp,0.dp,40.dp,0.dp), contentAlignment = Alignment.Center){
+                                        val name = if(item.eventType == EventType.WEDDING) "${item.firstName1} / ${item.firstName2} ${item.lastName}" else item.name
+                                        Text(text = name, style = Typography.titleLarge, modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp))
+                                    }
+                                } else {
+                                    Box (modifier = Modifier.fillMaxWidth().padding(0.dp,0.dp,40.dp,0.dp), contentAlignment = Alignment.Center) {
+                                        Text(text = item.comments, style = Typography.titleLarge, modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp))
+                                    }
                                 }
+
                             }
 
                             // EVENT TYPE & DATE
@@ -379,15 +386,17 @@ fun ListView(eventList: MutableList<Event>){
                                 }
                             }
 
-                            // VENUE & READY TIME
-                            Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
-                                // VENUE
-                                Box {
-                                    Text(text = item.venue, style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
-                                }
-                                // VENUE & READY TIME TIME
-                                Box (modifier = Modifier.fillMaxWidth(), Alignment.CenterEnd){
-                                    Text(text = "${stringResource(R.string.time_ready)}: ${item.timeReady}", style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
+                            if(item.eventType != EventType.RESERVED){
+                                // VENUE & READY TIME
+                                Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                                    // VENUE
+                                    Box {
+                                        Text(text = item.venue, style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
+                                    }
+                                    // VENUE & READY TIME TIME
+                                    Box (modifier = Modifier.fillMaxWidth(), Alignment.CenterEnd){
+                                        Text(text = "${stringResource(R.string.time_ready)}: ${item.timeReady}", style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
+                                    }
                                 }
                             }
 
@@ -434,12 +443,17 @@ fun EventDetails(navController: NavController, viewModel: HomeViewModel, printer
             onDismissRequest = {},
             title = {
                 Row (modifier = Modifier.fillMaxWidth()){
-                    Text(text = ("$name\n$eventType"), modifier = Modifier.weight(5f))
-                    Box(modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)).weight(1f)){
-                        IconButton(onClick = { viewModel.printPdf(printer, event) }){
-                            Icon(painterResource(R.drawable.ic_print), "settings")
+                    if(event.eventType != EventType.RESERVED){
+                        Text(text = ("$name\n$eventType"), modifier = Modifier.weight(5f))
+                        Box(modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)).weight(1f)){
+                            IconButton(onClick = { viewModel.printPdf(printer, event) }){
+                                Icon(painterResource(R.drawable.ic_print), "settings")
+                            }
                         }
+                    } else {
+                        Text(text = ("${event.comments}\n$eventType"), modifier = Modifier.weight(5f))
                     }
+
                 }
             },
             text = {
@@ -466,24 +480,27 @@ fun EventDetails(navController: NavController, viewModel: HomeViewModel, printer
                     }
 
                     //TIMES
-                    Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
-                        Icon(painter = painterResource(R.drawable.ic_time), "times")
-                        Column (modifier = Modifier.weight(2f).padding(24.dp,0.dp,0.dp,0.dp)){
-                            Text(stringResource(R.string.time_ready))
-                            val time_guest = if(event.eventType == EventType.WEDDING || com.blazecode.eventtool.eventType.value == EventType.BIRTHDAY)
-                                stringResource(R.string.time_buffet) else stringResource(R.string.time_guests)
-                            Text(time_guest)
-                            Text(stringResource(R.string.time_start))
-                            Text(stringResource(R.string.time_end))
+                    if(event.eventType != EventType.RESERVED){
+                        Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+                            Icon(painter = painterResource(R.drawable.ic_time), "times")
+                            Column (modifier = Modifier.weight(2f).padding(24.dp,0.dp,0.dp,0.dp)){
+                                Text(stringResource(R.string.time_ready))
+                                val time_guest = if(event.eventType == EventType.WEDDING || com.blazecode.eventtool.eventType.value == EventType.BIRTHDAY)
+                                    stringResource(R.string.time_buffet) else stringResource(R.string.time_guests)
+                                Text(time_guest)
+                                Text(stringResource(R.string.time_start))
+                                Text(stringResource(R.string.time_end))
+                            }
+                            Column (modifier = Modifier.weight(2f).fillMaxWidth(), horizontalAlignment = Alignment.End){
+                                Text( event.timeReady.toString())
+                                Text( event.timeGuests.toString())
+                                Text( event.timeStart.toString())
+                                Text( event.timeEnd.toString())
+                            }
                         }
-                        Column (modifier = Modifier.weight(2f).fillMaxWidth(), horizontalAlignment = Alignment.End){
-                            Text( event.timeReady.toString())
-                            Text( event.timeGuests.toString())
-                            Text( event.timeStart.toString())
-                            Text( event.timeEnd.toString())
-                        }
+                        Spacer(modifier = Modifier.size(8.dp))
                     }
-                    Spacer(modifier = Modifier.size(8.dp))
+
                     // GUESTS
                     if(event.guestAmount != "0") {
                         Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {

@@ -43,10 +43,11 @@ class ReminderManager {
         val HOURS_TO_SUBSTRACT: Long = context.resources.getInteger(R.integer.REMINDER_AMOUNT_HOURS_BEFORE_TIME_READY).toLong()
         alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
+        val id = if(event.id != null) event.id else 0
         alarmIntent = Intent(context, ReminderBroadcastReceiver::class.java)
             .putExtra("reminderEvent", event as Parcelable)
             .let { intent ->
-            PendingIntent.getBroadcast(context, event.id!!, intent, PendingIntent.FLAG_IMMUTABLE)
+            PendingIntent.getBroadcast(context, id!!, intent, PendingIntent.FLAG_IMMUTABLE)
         }
         Log.i("RECEIVER", "GAVE ${event}")
 
