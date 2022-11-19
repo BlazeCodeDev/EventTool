@@ -274,7 +274,7 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onCl
     val backgroundColor = remember { mutableStateOf(Color.Unspecified) }
 
     if(eventType != null) {
-        if(eventType != EventType.UNKNOWN && colorfulDaysEnabled.value) {
+        if(eventType != EventType.UNKNOWN && eventType != EventType.RESERVED && colorfulDaysEnabled.value) {
             backgroundColor.value = Color(context.resources.getColor(context.resources.getIdentifier("${eventType.toString().lowercase()}_full", "color", context.packageName)))
         } else {
             backgroundColor.value = MaterialTheme.colorScheme.primary
