@@ -6,8 +6,8 @@
   -->
 
 <resources>
-    <color name="unknown">#00000000</color>
-    <color name="reserved">#00000000</color>
+    <color name="unknown">#66EEFF00</color>
+    <color name="reserved">#6609E3FF</color>
     <color name="birthday">#66FFE06F</color>
     <color name="wedding">#669C9C9C</color>
     <color name="company_event">#66316650</color>
@@ -15,7 +15,8 @@
     <color name="folkfest">#66F75E25</color>
     <color name="rental">#663498DB</color>
 
-    <color name="unknown_full">#00000000</color>
+    <color name="unknown_full">#FFEEFF00</color>
+    <color name="reserved_full">#09E3FF</color>
     <color name="birthday_full">#FFE07F</color>
     <color name="wedding_full">#9C9C9C</color>
     <color name="company_event_full">#316650</color>

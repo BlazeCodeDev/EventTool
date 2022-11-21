@@ -274,7 +274,7 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onCl
     val backgroundColor = remember { mutableStateOf(Color.Unspecified) }
 
     if(eventType != null) {
-        if(eventType != EventType.UNKNOWN && eventType != EventType.RESERVED && colorfulDaysEnabled.value) {
+        if(colorfulDaysEnabled.value) {
             backgroundColor.value = Color(context.resources.getColor(context.resources.getIdentifier("${eventType.toString().lowercase()}_full", "color", context.packageName)))
         } else {
             backgroundColor.value = MaterialTheme.colorScheme.primary
@@ -299,7 +299,7 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onCl
         val textColor: Color?
         if(eventType != null && colorfulDaysEnabled.value){
             val color = backgroundColor.value.toArgb()
-            textColor = if(color.red > 125 && color.green > 125 && color.blue > 125){
+            textColor = if(color.red > 125 || color.green > 125 || color.blue > 125){
                 Color.Black
             } else {
                 Color.White
