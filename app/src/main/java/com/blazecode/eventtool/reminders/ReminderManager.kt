@@ -14,6 +14,7 @@ import android.os.Parcelable
 import android.util.Log
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
+import com.blazecode.eventtool.enums.EventType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -29,7 +30,8 @@ class ReminderManager {
 
         for (event in list) {
             if((event.date.isEqual(LocalDate.now()) && event.timeReady.minusHours(HOURS_TO_SUBSTRACT).isAfter(LocalTime.now()))
-                || event.date.isAfter(LocalDate.now())) {
+                || event.date.isAfter(LocalDate.now())
+                && event.eventType != EventType.RESERVED) {
                 filteredList.add(event)
             }
         }
