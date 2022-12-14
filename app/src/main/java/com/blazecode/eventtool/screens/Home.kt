@@ -388,13 +388,13 @@ fun ListView(eventList: MutableList<Event>){
 
                             if(item.eventType != EventType.RESERVED){
                                 // VENUE & READY TIME
-                                Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
+                                Row (verticalAlignment = Alignment.CenterVertically){
                                     // VENUE
-                                    Box {
+                                    Box (modifier = Modifier.weight(5f)){
                                         Text(text = item.venue, style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
                                     }
-                                    // VENUE & READY TIME TIME
-                                    Box (modifier = Modifier.fillMaxWidth(), Alignment.CenterEnd){
+                                    // READY TIME TIME
+                                    Box (modifier = Modifier.weight(2f), Alignment.CenterEnd){
                                         Text(text = "${stringResource(R.string.time_ready)}: ${item.timeReady}", style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
                                     }
                                 }
