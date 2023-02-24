@@ -28,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,6 +55,7 @@ import com.blazecode.eventtool.util.PhoneUtil
 import com.blazecode.eventtool.util.pdf.PdfPrinter
 import com.blazecode.eventtool.viewmodels.HomeViewModel
 import com.blazecode.eventtool.views.DefaultPreference
+import com.blazecode.eventtool.views.EventListItem
 import com.blazecode.eventtool.views.SwitchPreference
 import com.blazecode.tsviewer.util.updater.GitHubUpdater
 import com.google.accompanist.flowlayout.FlowRow
@@ -67,7 +67,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
 import java.time.format.TextStyle
 import java.util.*
 
@@ -336,83 +335,14 @@ fun ListView(eventList: MutableList<Event>){
     if(filteredList.size > 0){
         LazyColumn {
             items(items = filteredList, itemContent = { item ->
-                Card (modifier = Modifier.fillMaxWidth().padding(4.dp),
-                    onClick = { eventDetailsEvent.value = item; showEventDetails.value= true; selectedEvent.value = item }) {
-
-                    // GRADIENT
-                    Box (modifier = Modifier.background(
-                        brush = Brush.horizontalGradient(colors = listOf(
-                            colorResource(context.resources.getIdentifier(item.eventType.toString().lowercase(), "color", context.packageName)),
-                            MaterialTheme.colorScheme.secondaryContainer,
-                            MaterialTheme.colorScheme.secondaryContainer)))
-                    ){
-
-                        Column {
-                            // NAME & ICON
-                            Row (modifier = Modifier.fillMaxWidth()){
-                                // ICON
-                                Box {
-                                    Icon(
-                                        painter = painterResource(context.resources.getIdentifier("ic_${item.eventType.toString().lowercase()}", "drawable", context.packageName)),
-                                        contentDescription = "EventType Icon",
-                                        modifier = Modifier.padding(8.dp))
-                                }
-                                // NAME
-                                if(item.eventType != EventType.RESERVED){
-                                    Box (modifier = Modifier.fillMaxWidth().padding(0.dp,0.dp,40.dp,0.dp), contentAlignment = Alignment.Center){
-                                        val name = if(item.eventType == EventType.WEDDING) "${item.firstName1} / ${item.firstName2} ${item.lastName}" else item.name
-                                        Text(text = name, style = Typography.titleLarge, modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp))
-                                    }
-                                } else {
-                                    Box (modifier = Modifier.fillMaxWidth().padding(0.dp,0.dp,40.dp,0.dp), contentAlignment = Alignment.Center) {
-                                        Text(text = item.comments, style = Typography.titleLarge, modifier = Modifier.padding(0.dp, 8.dp, 0.dp, 0.dp))
-                                    }
-                                }
-
-                            }
-
-                            // EVENT TYPE & DATE
-                            Row (modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically){
-                                // EVENT TYPE
-                                Box {
-                                    val eventType = stringResource(context.resources.getIdentifier(item.eventType.toString().lowercase(), "string", context.packageName))
-                                    Text(text = eventType, style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
-                                }
-                                // DATE
-                                Box (modifier = Modifier.fillMaxWidth(), Alignment.CenterEnd){
-                                    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-                                    val dayOfWeekFormatter = DateTimeFormatterBuilder().parseCaseInsensitive().appendPattern("EE").toFormatter(Locale.getDefault())
-                                    Text(text = "${item.date.format(dayOfWeekFormatter)}, ${item.date.format(dateFormatter)}", style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
-                                }
-                            }
-
-                            if(item.eventType != EventType.RESERVED){
-                                // VENUE & READY TIME
-                                Row (verticalAlignment = Alignment.CenterVertically){
-                                    // VENUE
-                                    Box (modifier = Modifier.weight(5f)){
-                                        Text(text = item.venue, style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
-                                    }
-                                    // READY TIME TIME
-                                    Box (modifier = Modifier.weight(2f), Alignment.CenterEnd){
-                                        Text(text = "${stringResource(R.string.time_ready)}: ${item.timeReady}", style = Typography.bodyMedium, modifier = Modifier.padding(8.dp))
-                                    }
-                                }
-                            }
-
-                            // ADDITIONS
-                            FlowRow (modifier = Modifier.padding(4.dp)) {
-                                item.additions.forEach {
-                                    SuggestionChip(
-                                        modifier = Modifier.padding(2.dp, 0.dp, 2.dp, 0.dp),
-                                        label = {Text(stringResource(LocalContext.current.resources.getIdentifier(it.name.lowercase(), "string", LocalContext.current.packageName)))},
-                                        onClick = {}
-                                    )
-                                }
-                            }
-                        }
+                EventListItem(
+                    event = item,
+                    onClick = {
+                        eventDetailsEvent.value = item
+                        showEventDetails.value= true
+                        selectedEvent.value = item
                     }
-                }
+                )
             })
         }
     } else {
