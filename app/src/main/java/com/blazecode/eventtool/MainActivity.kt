@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
@@ -25,6 +25,7 @@ import com.blazecode.eventtool.util.PermissionManager
 import com.blazecode.eventtool.util.pdf.PdfPrinter
 import com.blazecode.eventtool.viewmodels.HomeViewModel
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
+import com.blazecode.eventtool.viewmodels.SearchViewModel
 import com.blazecode.eventtool.viewmodels.SettingsViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -64,6 +65,8 @@ class MainActivity : ComponentActivity() {
                     event?.let {
                         NewEvent(NewEventViewModel(application, event), navController) }
                 }
+                // SEARCH
+                composable(NavRoutes.Search.route) { Search(SearchViewModel(application), navController) }
                 // SETTINGS
                 composable(NavRoutes.Settings.route){ Settings(SettingsViewModel(application), navController, permissionManager, exporter, importer) }
                 // OPEN SOURCE LICENSES

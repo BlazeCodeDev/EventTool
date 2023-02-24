@@ -1,6 +1,6 @@
 <!--
   ~ /*
-  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
   ~  */
   -->
 
@@ -22,6 +22,7 @@
     <string name="cannot_be_undone">This cannot be undone</string>
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
+    <string name="search">Search</string>
 
     <string name="choose_event_type">Choose Event Type</string>
     <string name="event_type">Event Type</string>

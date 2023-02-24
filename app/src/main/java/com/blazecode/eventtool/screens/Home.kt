@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
@@ -631,16 +631,25 @@ private fun TopAppBar(navController: NavController, debugDialog: Unit){
             }
         },
         actions = {
-            Box (modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)), contentAlignment = Alignment.Center){
-                Box(Modifier.combinedClickable (
-                    onClick = {
-                        navController.navigate(NavRoutes.Settings.route)
-                    },
-                    onLongClick = {
-                        debugDialog
-                        isDialogVisible.value = true
-                    })) {
-                    Icon(painterResource(R.drawable.ic_settings), "settings")
+            Row {
+                Box (modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)), contentAlignment = Alignment.Center){
+                    Box (modifier = Modifier.clickable {
+                        navController.navigate(NavRoutes.Search.route)
+                    }) {
+                        Icon(painterResource(R.drawable.ic_search), "search")
+                    }
+                }
+                Box (modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)), contentAlignment = Alignment.Center){
+                    Box(Modifier.combinedClickable (
+                        onClick = {
+                            navController.navigate(NavRoutes.Settings.route)
+                        },
+                        onLongClick = {
+                            debugDialog
+                            isDialogVisible.value = true
+                        })) {
+                        Icon(painterResource(R.drawable.ic_settings), "settings")
+                    }
                 }
             }
         }
