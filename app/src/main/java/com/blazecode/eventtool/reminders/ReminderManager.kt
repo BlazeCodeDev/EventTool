@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
@@ -30,8 +30,7 @@ class ReminderManager {
 
         for (event in list) {
             if((event.date.isEqual(LocalDate.now()) && event.timeReady.minusHours(HOURS_TO_SUBSTRACT).isAfter(LocalTime.now()))
-                || event.date.isAfter(LocalDate.now())
-                && event.eventType != EventType.RESERVED) {
+                || event.date.isAfter(LocalDate.now())) {
                 filteredList.add(event)
             }
         }
@@ -42,21 +41,23 @@ class ReminderManager {
     }
 
     fun schedule(context: Context, event: Event){
-        val HOURS_TO_SUBSTRACT: Long = context.resources.getInteger(R.integer.REMINDER_AMOUNT_HOURS_BEFORE_TIME_READY).toLong()
-        alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if(event.eventType != EventType.RESERVED) {
+            val HOURS_TO_SUBSTRACT: Long = context.resources.getInteger(R.integer.REMINDER_AMOUNT_HOURS_BEFORE_TIME_READY).toLong()
+            alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val id = if(event.id != null) event.id else 0
-        alarmIntent = Intent(context, ReminderBroadcastReceiver::class.java)
-            .putExtra("reminderEvent", event as Parcelable)
-            .let { intent ->
-            PendingIntent.getBroadcast(context, id!!, intent, PendingIntent.FLAG_IMMUTABLE)
+            val id = if(event.id != null) event.id else 0
+            alarmIntent = Intent(context, ReminderBroadcastReceiver::class.java)
+                .putExtra("reminderEvent", event as Parcelable)
+                .let { intent ->
+                    PendingIntent.getBroadcast(context, id!!, intent, PendingIntent.FLAG_IMMUTABLE)
+                }
+            Log.i("RECEIVER", "GAVE ${event}")
+
+            alarmManager?.setExact(
+                AlarmManager.RTC_WAKEUP,
+                LocalDateTime.of(event.date, event.timeReady).minusHours(HOURS_TO_SUBSTRACT).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+                alarmIntent
+            )
         }
-        Log.i("RECEIVER", "GAVE ${event}")
-
-        alarmManager?.setExact(
-            AlarmManager.RTC_WAKEUP,
-            LocalDateTime.of(event.date, event.timeReady).minusHours(HOURS_TO_SUBSTRACT).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
-            alarmIntent
-        )
     }
 }
