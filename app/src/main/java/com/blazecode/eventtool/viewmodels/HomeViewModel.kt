@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
@@ -13,7 +13,6 @@ import androidx.lifecycle.viewModelScope
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.database.EventRepository
 import com.blazecode.eventtool.util.DataStoreManager
-import com.blazecode.eventtool.util.pdf.PdfPrinter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -26,10 +25,6 @@ class HomeViewModel(app: Application): AndroidViewModel(app) {
             tempList = repository.getEventList(getApplication())
         }.join()
         return tempList
-    }
-
-    fun printPdf(printer: PdfPrinter, event: Event){
-        printer.print(event)
     }
 
     suspend fun setDebugUpdateCheck(context: Context, enabled: Boolean){
