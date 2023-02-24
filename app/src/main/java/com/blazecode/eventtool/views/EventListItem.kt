@@ -35,7 +35,7 @@ import java.util.*
 @Composable
 fun EventListItem(event: Event, onClick: () -> Unit) {
     val context = LocalContext.current
-    Card (modifier = Modifier.fillMaxWidth().padding(4.dp),
+    Card (modifier = Modifier.fillMaxWidth().padding(8.dp, 8.dp, 8.dp, 0.dp),
         //onClick = { eventDetailsEvent.value = item; showEventDetails.value= true; selectedEvent.value = item }) {
         onClick = { onClick() }) {
 
