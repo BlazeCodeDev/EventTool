@@ -104,4 +104,7 @@ dependencies {
 
     // VOLLEY
     implementation 'com.android.volley:volley:1.2.1'
+
+    // COMPOSE DATE TIME PICKER
+    implementation 'com.marosseleng.android:compose-material3-datetime-pickers:0.6.2'
 }

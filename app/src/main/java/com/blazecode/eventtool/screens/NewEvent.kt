@@ -1,13 +1,11 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
 package com.blazecode.eventtool
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -25,6 +23,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -48,6 +47,9 @@ import com.blazecode.eventtool.util.MailUtil
 import com.blazecode.eventtool.util.PhoneUtil
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
 import com.google.accompanist.flowlayout.FlowRow
+import com.marosseleng.compose.material3.datetimepickers.date.domain.DatePickerDefaults
+import com.marosseleng.compose.material3.datetimepickers.date.ui.dialog.DatePickerDialog
+import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -123,6 +125,7 @@ private fun MainLayout(viewModel: NewEventViewModel, navController: NavControlle
                 if(viewModel.editMode) DeleteLayout(viewModel, navController)
             }
             EventType.RESERVED -> {
+                DatePickerLayout(viewModel, context)
                 CommentsLayout(viewModel)
                 if(viewModel.editMode) DeleteLayout(viewModel, navController)
             }
@@ -144,6 +147,7 @@ private fun MainLayout(viewModel: NewEventViewModel, navController: NavControlle
 }
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun DatePickerLayout(viewModel: NewEventViewModel, context: Context){
     val showDialog = rememberSaveable { mutableStateOf(false) }
@@ -166,18 +170,20 @@ private fun DatePickerLayout(viewModel: NewEventViewModel, context: Context){
     }
 
     if(showDialog.value){
-        showDialog.value = false
-
-        val datePicker = DatePickerDialog(
-            context, { _, year: Int, month: Int, dayOfMonth: Int ->
-                tempDate.value = LocalDate.of(year, month + 1, dayOfMonth)
+        DatePickerDialog(
+            initialDate = tempDate.value,
+            typography = DatePickerDefaults.typography(
+                day = Typography.bodySmall,
+            ),
+            onDateChange = { date ->
+                tempDate.value = date
                 if(tempDate.value.isBefore(LocalDate.now())){
                     showDialogDateBefore.value = true
                 } else viewModel.event.date = tempDate.value
+                showDialog.value = false
             },
-            tempDate.value.year, tempDate.value.monthValue - 1, tempDate.value.dayOfMonth
+            onDismissRequest = { showDialog.value = false }
         )
-        datePicker.show()
     }
 
     if(showDialogDateBefore.value) {
@@ -191,6 +197,7 @@ private fun DatePickerLayout(viewModel: NewEventViewModel, context: Context){
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
     val showDialog = rememberSaveable { mutableStateOf(false) }
@@ -252,7 +259,6 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
     }
 
     if(showDialog.value){
-        showDialog.value = false
 
         var hour = LocalTime.now().hour
         var minute = LocalTime.now().minute
@@ -276,30 +282,39 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
             }
         }
 
-        val timePicker = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-            when (timeType.value){
-                TimeType.READY -> {
-                    tempTimeReady.value = LocalTime.of(hourOfDay, minute)
-                    if(viewModel.event.date == LocalDate.now() && tempTimeReady.value.isBefore(LocalTime.now())){
-                        showTimeInPast.value = true
-                    } else viewModel.event.timeReady = tempTimeReady.value
+        TimePickerDialog(
+            onDismissRequest = { showDialog.value = false },
+            initialTime = LocalTime.of(hour, minute),
+            onTimeChange = {
+                when (timeType.value){
+                    TimeType.READY -> {
+                        tempTimeReady.value = LocalTime.of(it.hour, it.minute)
+                        if(viewModel.event.date == LocalDate.now() && tempTimeReady.value.isBefore(LocalTime.now())){
+                            showTimeInPast.value = true
+                        } else viewModel.event.timeReady = tempTimeReady.value
+                    }
+                    TimeType.GUESTS -> {
+                        tempTimeGuests.value = LocalTime.of(it.hour, it.minute)
+                        if(viewModel.event.date == LocalDate.now() && tempTimeGuests.value.isBefore(LocalTime.now())){
+                            showTimeInPast.value = true
+                        } else viewModel.event.timeGuests = tempTimeGuests.value
+                    }
+                    TimeType.START -> {
+                        tempTimeStart.value = LocalTime.of(it.hour, it.minute)
+                        if(viewModel.event.date == LocalDate.now() && tempTimeStart.value.isBefore(LocalTime.now())){
+                            showTimeInPast.value = true
+                        } else viewModel.event.timeStart = tempTimeStart.value
+                    }
+                    TimeType.END -> {
+                        tempTimeEnd.value = LocalTime.of(it.hour, it.minute)
+                        if(viewModel.event.date == LocalDate.now() && tempTimeEnd.value.isBefore(LocalTime.now())){
+                            showTimeInPast.value = true
+                        } else viewModel.event.timeEnd = tempTimeEnd.value
+                    }
                 }
-                TimeType.GUESTS -> {
-                    tempTimeGuests.value = LocalTime.of(hourOfDay, minute)
-                    viewModel.event.timeGuests = tempTimeGuests.value
-                }
-                TimeType.START -> {
-                    tempTimeStart.value = LocalTime.of(hourOfDay, minute)
-                    viewModel.event.timeStart = tempTimeStart.value
-                }
-                TimeType.END -> {
-                    tempTimeEnd.value = LocalTime.of(hourOfDay, minute)
-                    viewModel.event.timeEnd = tempTimeEnd.value
-                }
+                showDialog.value = false
             }
-        } ,hour, minute, true)
-
-        timePicker.show()
+        )
     }
 
     if(showTimeInPast.value) {
@@ -313,7 +328,12 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
                 Text(stringResource(R.string.cancel)) } },
             dismissButton = { OutlinedButton(onClick = {
                 showTimeInPast.value = false
-                viewModel.event.timeReady = tempTimeReady.value }) {
+                when (timeType.value){
+                    TimeType.READY -> viewModel.event.timeReady = tempTimeReady.value
+                    TimeType.GUESTS -> viewModel.event.timeGuests = tempTimeGuests.value
+                    TimeType.START -> viewModel.event.timeStart = tempTimeStart.value
+                    TimeType.END -> viewModel.event.timeEnd = tempTimeEnd.value
+                }}) {
                 Text(stringResource(R.string.save_anyway)) } }
         )
     }
