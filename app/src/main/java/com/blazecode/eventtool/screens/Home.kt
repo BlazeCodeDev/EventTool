@@ -67,15 +67,15 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
 
-var showDialog = mutableStateOf(false)
-var showEventDetails = mutableStateOf(false)
-var eventDetailsEvent = mutableStateOf(Event(null))
-val isDialogVisible = mutableStateOf(false)
+private var showDialog = mutableStateOf(false)
+private var showEventDetails = mutableStateOf(false)
+private var eventDetailsEvent = mutableStateOf(Event(null))
+private val isDialogVisible = mutableStateOf(false)
 
-val tappedDate = mutableStateOf( LocalDate.now() )
+private val tappedDate = mutableStateOf( LocalDate.now() )
 
-val colorfulDaysEnabled = mutableStateOf(false)
-val debugUpdateCheckEnabled = mutableStateOf(false)
+private val colorfulDaysEnabled = mutableStateOf(false)
+private val debugUpdateCheckEnabled = mutableStateOf(false)
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -149,7 +149,7 @@ private fun MainLayout(viewModel: HomeViewModel, navController: NavController) {
 }
 
 @Composable
-fun CalendarView(navController: NavController, eventList: MutableList<Event>){
+private fun CalendarView(navController: NavController, eventList: MutableList<Event>){
     val scope = rememberCoroutineScope()
 
     val currentMonth = remember { YearMonth.now() }
@@ -252,7 +252,7 @@ private fun CalendarTap(navController: NavController,date: LocalDate, eventList:
 }
 
 @Composable
-fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
+private fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
     Row(modifier = Modifier.fillMaxWidth()) {
         for (dayOfWeek in daysOfWeek) {
             Text(
@@ -316,7 +316,7 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onCl
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListView(eventList: MutableList<Event>){
+private fun ListView(eventList: MutableList<Event>){
     val context = LocalContext.current
     val sortedList = eventList.sortedBy { it.date }
     val filteredList = mutableListOf<Event>()
@@ -356,7 +356,7 @@ fun ListView(eventList: MutableList<Event>){
     }
 }
 
-fun EditEvent(navController: NavController, event: Event){
+private fun EditEvent(navController: NavController, event: Event){
     navController.currentBackStackEntry?.savedStateHandle?.set("event", event)
     navController.navigate(NavRoutes.NewEvent.route)
 }

@@ -53,7 +53,7 @@ import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePick
 import java.time.LocalDate
 import java.time.LocalTime
 
-val eventType = mutableStateOf(EventType.UNKNOWN)
+private val eventType = mutableStateOf(EventType.UNKNOWN)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -418,7 +418,7 @@ private fun CommentsLayout(viewModel: NewEventViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdditionsLayout(viewModel: NewEventViewModel) {
+private fun AdditionsLayout(viewModel: NewEventViewModel) {
     val allAdditions: MutableList<Additions> = Additions.values().toMutableList()
     val additions = rememberSaveable { mutableStateOf(viewModel.event.additions) }
 
@@ -453,7 +453,7 @@ fun AdditionsLayout(viewModel: NewEventViewModel) {
     }
 }
 
-fun getAddition(value: String): Additions? {
+private fun getAddition(value: String): Additions? {
     val map = Additions.values().associateBy(Additions::name)
     return map[value]
 }
@@ -681,7 +681,7 @@ private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
 
 
 @Composable
-fun DeleteLayout(viewModel: NewEventViewModel, navController: NavController){
+private fun DeleteLayout(viewModel: NewEventViewModel, navController: NavController){
     val context = LocalContext.current
     val showConfirmDialog = rememberSaveable { mutableStateOf(false) }
     val deletionConfirmed = rememberSaveable { mutableStateOf(false) }
