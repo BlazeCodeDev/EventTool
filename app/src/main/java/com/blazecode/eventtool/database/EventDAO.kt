@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
@@ -23,6 +23,9 @@ interface EventDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addEvent(vararg users: Event)
+
+    @Query("SELECT * FROM Event WHERE name LIKE :name OR firstName1 LIKE :name OR firstName2 LIKE :name OR lastName LIKE :name")
+    fun getEventsByName(name: String): MutableList<Event>
 
     @Query("DELETE FROM Event WHERE id LIKE :id")
     fun deleteById(id: Int)
