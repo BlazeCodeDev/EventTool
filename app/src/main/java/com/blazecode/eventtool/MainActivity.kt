@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                         NewEvent(NewEventViewModel(application, event), navController) }
                 }
                 // SEARCH
-                composable(NavRoutes.Search.route) { Search(SearchViewModel(application), navController) }
+                composable(NavRoutes.Search.route) { Search(SearchViewModel(application), navController, printer) }
                 // SETTINGS
                 composable(NavRoutes.Settings.route){ Settings(SettingsViewModel(application), navController, permissionManager, exporter, importer) }
                 // OPEN SOURCE LICENSES

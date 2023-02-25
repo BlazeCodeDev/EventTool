@@ -24,17 +24,35 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
+import com.blazecode.eventtool.navigation.NavRoutes
 import com.blazecode.eventtool.ui.theme.EventToolTheme
+import com.blazecode.eventtool.util.pdf.PdfPrinter
 import com.blazecode.eventtool.viewmodels.SearchViewModel
+import com.blazecode.eventtool.views.EventDetails
 import com.blazecode.eventtool.views.EventListItem
+
+private var showEventDetails = mutableStateOf(false)
+private var eventDetailsEvent = mutableStateOf(Event(null))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Search(viewModel: SearchViewModel = viewModel(), navController: NavController) {
-    val context = LocalContext.current
-
+fun Search(viewModel: SearchViewModel = viewModel(), navController: NavController, printer: PdfPrinter) {
     EventToolTheme {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
+        if(showEventDetails.value)
+            EventDetails(
+                navController = navController,
+                printer = printer,
+                event = eventDetailsEvent.value,
+                onEdit = {
+                    EditEvent(navController, eventDetailsEvent.value)
+                    showEventDetails.value = false
+                     },
+                onClose = {
+                    showEventDetails.value = false
+                })
+
         Scaffold(
             topBar = { TopAppBar(viewModel, LocalContext.current, scrollBehavior, navController) },
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -60,7 +78,13 @@ private fun MainLayout(viewModel: SearchViewModel){
     LazyColumn {
         item { SearchLayout(viewModel) }
         items(items = eventList.value, itemContent = { item ->
-            EventListItem(event = item, onClick = {  })
+            EventListItem(
+                event = item,
+                onClick = {
+                    eventDetailsEvent.value = item
+                    showEventDetails.value = true
+                }
+            )
         })
     }
 }
@@ -111,4 +135,9 @@ private fun TopAppBar(viewModel: SearchViewModel, context: Context, scrollBehavi
         },
         scrollBehavior = scrollBehavior
     )
+}
+
+private fun EditEvent(navController: NavController, event: Event){
+    navController.currentBackStackEntry?.savedStateHandle?.set("event", event)
+    navController.navigate(NavRoutes.NewEvent.route)
 }
