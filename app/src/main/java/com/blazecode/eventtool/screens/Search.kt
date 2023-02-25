@@ -20,8 +20,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.navigation.NavRoutes
@@ -77,15 +82,28 @@ private fun MainLayout(viewModel: SearchViewModel){
 
     LazyColumn {
         item { SearchLayout(viewModel) }
-        items(items = eventList.value, itemContent = { item ->
-            EventListItem(
-                event = item,
-                onClick = {
-                    eventDetailsEvent.value = item
-                    showEventDetails.value = true
-                }
-            )
-        })
+        if(eventList.value.isNotEmpty()){
+            items(items = eventList.value, itemContent = { item ->
+                EventListItem(
+                    event = item,
+                    onClick = {
+                        eventDetailsEvent.value = item
+                        showEventDetails.value = true
+                    }
+                )
+            })
+        } else {
+            item {
+                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_empty_box))
+                val progress by animateLottieCompositionAsState(composition)
+                Box(modifier = Modifier.fillMaxSize().padding(0.dp, dimensionResource(R.dimen.fab_height_padding), 0.dp, dimensionResource(R.dimen.fab_height_padding)),
+                    contentAlignment = Alignment.Center){
+                    LottieAnimation(
+                        composition = composition,
+                        progress = { progress },
+                    )
+                } }
+        }
     }
 }
 
