@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ /*
-  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+  ~  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
   ~  */
   -->
 
@@ -11,6 +11,8 @@
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
     <string name="add">Hinzufügen</string>
+    <string name="search">Suche</string>
+    <string name="search_hint">Suche Namen oder Datum</string>
     <string name="choose_event_type">Veranstaltungsart auswählen</string>
     <string name="birthday">Geburtstag</string>
     <string name="wedding">Hochzeit</string>
