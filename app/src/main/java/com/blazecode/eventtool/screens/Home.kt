@@ -100,7 +100,18 @@ fun Home(viewModel: HomeViewModel = viewModel(), navController: NavController, p
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
             if(showDialog.value) EventTypeChooser(navController, tappedDate.value)
-            if(showEventDetails.value) EventDetails(navController, printer, eventDetailsEvent.value)
+            if(showEventDetails.value)
+                EventDetails(
+                    navController = navController,
+                    printer = printer,
+                    event = eventDetailsEvent.value,
+                    onEdit = {
+                        EditEvent(navController, eventDetailsEvent.value)
+                        showEventDetails.value = false
+                    },
+                    onClose = {
+                        showEventDetails.value = false
+                    })
 
             Scaffold(
                 topBar = { TopAppBar(navController, DebugDialog(viewModel)) },

@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (c) BlazeCode / Ralf Lehmann, 2022.
+ *  * Copyright (c) BlazeCode / Ralf Lehmann, 2023.
  *
  */
 
@@ -92,7 +92,7 @@ class PdfPrinter(val activity: MainActivity) {
         lines.add(PdfLine("",""))       //SPACER
 
         // TIMES
-        val time_guest = if(event.eventType == EventType.WEDDING || com.blazecode.eventtool.eventType.value == EventType.BIRTHDAY)
+        val time_guest = if(event.eventType == EventType.WEDDING || event.eventType == EventType.BIRTHDAY)
             activity.resources.getString(R.string.time_buffet) else activity.resources.getString(R.string.time_guests)
         lines.add(PdfLine(activity.resources.getString(R.string.time_ready), event.timeReady.toString()))
         lines.add(PdfLine(activity.resources.getString(R.string.time_start), event.timeStart.toString()))

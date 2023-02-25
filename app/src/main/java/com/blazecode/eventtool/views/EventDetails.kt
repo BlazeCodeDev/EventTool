@@ -21,8 +21,6 @@ import androidx.navigation.NavController
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.enums.EventType
-import com.blazecode.eventtool.screens.EditEvent
-import com.blazecode.eventtool.screens.showEventDetails
 import com.blazecode.eventtool.util.MailUtil
 import com.blazecode.eventtool.util.PhoneUtil
 import com.blazecode.eventtool.util.pdf.PdfPrinter
@@ -31,13 +29,12 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EventDetails(navController: NavController, printer: PdfPrinter, event: Event) {
+fun EventDetails(navController: NavController, printer: PdfPrinter, event: Event, onEdit: () -> Unit, onClose: () -> Unit) {
     val context = LocalContext.current
     val name = if(event.name.isNotEmpty()) event.name else "${event.firstName1} / ${event.firstName2} ${event.lastName}"
     val eventType = stringResource(context.resources.getIdentifier(event.eventType.toString().lowercase(), "string", context.packageName))
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
-    if(showEventDetails.value) {
         AlertDialog(
             modifier = Modifier.fillMaxWidth(),
             onDismissRequest = {},
@@ -85,7 +82,7 @@ fun EventDetails(navController: NavController, printer: PdfPrinter, event: Event
                             Icon(painter = painterResource(R.drawable.ic_time), "times")
                             Column (modifier = Modifier.weight(2f).padding(24.dp,0.dp,0.dp,0.dp)){
                                 Text(stringResource(R.string.time_ready))
-                                val time_guest = if(event.eventType == EventType.WEDDING || com.blazecode.eventtool.eventType.value == EventType.BIRTHDAY)
+                                val time_guest = if(event.eventType == EventType.WEDDING || event.eventType == EventType.BIRTHDAY)
                                     stringResource(R.string.time_buffet) else stringResource(R.string.time_guests)
                                 Text(time_guest)
                                 Text(stringResource(R.string.time_start))
@@ -198,8 +195,9 @@ fun EventDetails(navController: NavController, printer: PdfPrinter, event: Event
                     }
                 }
             },
-            dismissButton = { OutlinedButton(onClick = { EditEvent(navController, event); showEventDetails.value = false }) { Text(stringResource(R.string.edit)) } },
-            confirmButton = { FilledTonalButton(onClick = { showEventDetails.value = false }) { Text(stringResource(R.string.close)) }
+            //dismissButton = { OutlinedButton(onClick = { EditEvent(navController, event); showEventDetails.value = false }) { Text(stringResource(R.string.edit)) } },
+            dismissButton = { OutlinedButton(onClick = { onEdit() }) { Text(stringResource(R.string.edit)) } },
+            //confirmButton = { FilledTonalButton(onClick = { showEventDetails.value = false }) { Text(stringResource(R.string.close)) }
+            confirmButton = { FilledTonalButton(onClick = { onClose() }) { Text(stringResource(R.string.close)) }
             })
-    }
 }
