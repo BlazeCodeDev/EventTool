@@ -12,7 +12,7 @@
     <string name="cancel">Abbrechen</string>
     <string name="add">Hinzufügen</string>
     <string name="search">Suche</string>
-    <string name="search_hint">Suche Namen oder Datum</string>
+    <string name="search_hint">Suche Namen, Orte etc</string>
     <string name="choose_event_type">Veranstaltungsart auswählen</string>
     <string name="birthday">Geburtstag</string>
     <string name="wedding">Hochzeit</string>
