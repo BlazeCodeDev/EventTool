@@ -15,6 +15,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.database.DataBaseExporter
 import com.blazecode.eventtool.database.DataBaseImporter
@@ -27,9 +30,6 @@ import com.blazecode.eventtool.viewmodels.HomeViewModel
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
 import com.blazecode.eventtool.viewmodels.SearchViewModel
 import com.blazecode.eventtool.viewmodels.SettingsViewModel
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
 
 var errorDialogMessage = mutableStateOf("")
@@ -55,8 +55,8 @@ class MainActivity : ComponentActivity() {
         val printer = PdfPrinter(this)
         // CONTENT
         setContent {
-            val navController = rememberAnimatedNavController()
-            AnimatedNavHost(navController = navController, startDestination = NavRoutes.Home.route) {
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = NavRoutes.Home.route) {
                 // HOME
                 composable(route= NavRoutes.Home.route,) { Home(HomeViewModel(application), navController, printer) }
                 // NEW EVENT
