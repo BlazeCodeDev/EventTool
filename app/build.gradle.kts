@@ -103,4 +103,10 @@ dependencies {
 
     // COMPOSE DATE TIME PICKER
     implementation("com.marosseleng.android:compose-material3-datetime-pickers:0.7.2")
+
+    // CRASH DETECTION
+    val acraVersion = "5.11.3"
+    implementation("ch.acra:acra-mail:$acraVersion")
+    implementation("ch.acra:acra-dialog:$acraVersion")
+    implementation("com.google.guava:guava:32.1.3-jre")
 }

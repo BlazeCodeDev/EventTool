@@ -356,7 +356,9 @@ private fun ListView(eventList: MutableList<Event>){
     } else {
         val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.lottie_empty_box))
         val progress by animateLottieCompositionAsState(composition)
-        Box(modifier = Modifier.fillMaxSize().padding(0.dp, 0.dp, 0.dp, dimensionResource(R.dimen.fab_height_padding)),
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(0.dp, 0.dp, 0.dp, dimensionResource(R.dimen.fab_height_padding)),
             contentAlignment = Alignment.Center){
             LottieAnimation(
                 composition = composition,
@@ -383,7 +385,8 @@ private fun TopAppBar(navController: NavController, debugDialog: Unit){
                 Icon(
                     painterResource(R.drawable.header),
                     "header",
-                    modifier = Modifier.graphicsLayer(alpha = 0.99f)
+                    modifier = Modifier
+                        .graphicsLayer(alpha = 0.99f)
                         .drawWithCache {
                             val brush = Brush.horizontalGradient(listOf(primary, secondary))
                             onDrawWithContent {
@@ -444,6 +447,9 @@ private fun DebugDialog(viewModel: HomeViewModel){
                     SwitchPreference(null, "DEBUG_UPDATE_CHECK", null, debugUpdateCheckEnabled.value){ checked ->
                         debugUpdateCheckEnabled.value = checked
                         scope.launch { viewModel.setDebugUpdateCheck(context, debugUpdateCheckEnabled.value) }
+                    }
+                    DefaultPreference(icon = null, title = "CRASH_APP", summary = null) {
+                        throw Exception("Crash triggered by user")
                     }
                 }
             },

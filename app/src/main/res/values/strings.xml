@@ -115,4 +115,11 @@
 
     <string name="update_available">Update %s available</string>
     <string name="download">Download</string>
+
+
+    <!-- ERROR REPORT -->
+    <string name="send">Send</string>
+    <string name="error_report_title">Whoops, something went wrong</string>
+    <string name="error_user_comment">Comment</string>
+    <string name="error_user_email">Your E-Mail address (optional)</string>
 </resources>
