@@ -24,7 +24,6 @@ import com.blazecode.eventtool.database.DataBaseImporter
 import com.blazecode.eventtool.navigation.NavRoutes
 import com.blazecode.eventtool.screens.*
 import com.blazecode.eventtool.ui.theme.EventToolTheme
-import com.blazecode.eventtool.util.PermissionManager
 import com.blazecode.eventtool.util.pdf.PdfPrinter
 import com.blazecode.eventtool.viewmodels.HomeViewModel
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
@@ -48,8 +47,6 @@ class MainActivity : ComponentActivity() {
         // GET EVENT IF TAPPED NOTIFICATION
         notificationTapEvent.value = intent.extras?.getParcelable("event", Event::class.java)
 
-        val permissionManager = PermissionManager(this)
-
         val exporter = DataBaseExporter(this)
         val importer = DataBaseImporter(this)
         val printer = PdfPrinter(this)
@@ -68,7 +65,7 @@ class MainActivity : ComponentActivity() {
                 // SEARCH
                 composable(NavRoutes.Search.route) { Search(SearchViewModel(application), navController, printer) }
                 // SETTINGS
-                composable(NavRoutes.Settings.route){ Settings(SettingsViewModel(application), navController, permissionManager, exporter, importer) }
+                composable(NavRoutes.Settings.route){ Settings(SettingsViewModel(application), navController, exporter, importer) }
                 // OPEN SOURCE LICENSES
                 composable(NavRoutes.OpenSourceLicenses.route){ OpenSourceLicenses(navController) }
             }

@@ -96,6 +96,8 @@
     <string name="import_successful">Import successful</string>
     <string name="import_error">Import error</string>
     <string name="import_dialog_message">This will replace all existing data, this cannot be undone</string>
+    <string name="noificationDialog_permission_needed">Permission needed</string>
+    <string name="noificationDialog_permission_needed_message">Please allow the app to show notifications</string>
 
     <string name="notification_title">%1$s in %2$dh</string>
 

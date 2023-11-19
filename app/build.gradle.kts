@@ -75,9 +75,10 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
     // ACCOMPANIST
-    implementation("com.google.accompanist:accompanist-flowlayout:0.27.0")
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.30.0")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.1")
+    val accompanist_version = "0.33.2-alpha"
+    implementation("com.google.accompanist:accompanist-flowlayout:$accompanist_version")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist_version")
+    implementation("com.google.accompanist:accompanist-permissions:$accompanist_version")
 
     // CALENDAR
     implementation("com.kizitonwose.calendar:compose:2.4.0")
