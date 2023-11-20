@@ -73,6 +73,7 @@ private fun MainLayout(viewModel: SettingsViewModel, navController: NavControlle
     val context = LocalContext.current
     val showImportDialog = rememberSaveable{ mutableStateOf(false) }
     val showNotificationPermissionNeeded = rememberSaveable{ mutableStateOf(false) }
+    val showScheduleAlarmsPermissionNeeded = rememberSaveable{ mutableStateOf(false) }
     val hasNotificationPermission = rememberPermissionState(POST_NOTIFICATIONS)
 
     val remindersEnabled = rememberSaveable{ mutableStateOf(false) }
@@ -96,12 +97,21 @@ private fun MainLayout(viewModel: SettingsViewModel, navController: NavControlle
 
 
                 if(checked){
-                    if(hasNotificationPermission.status.isGranted){
+                    if(hasNotificationPermission.status.isGranted && viewModel.canScheduleExactAlarms()){
                         remindersEnabled.value = true
                         scope.launch { viewModel.setRemindersEnabled(context, true) }
-                    } else if (hasNotificationPermission.status.shouldShowRationale) {
+                    }
+
+                    if(!viewModel.canScheduleExactAlarms()){
+                        remindersEnabled.value = false
+                        showScheduleAlarmsPermissionNeeded.value = true
+                    }
+
+                    if(hasNotificationPermission.status.shouldShowRationale){
+                        remindersEnabled.value = false
                         showNotificationPermissionNeeded.value = true
-                    } else {
+                    } else if (!hasNotificationPermission.status.isGranted){
+                        remindersEnabled.value = false
                         hasNotificationPermission.launchPermissionRequest()
                     }
                 } else {
@@ -147,6 +157,17 @@ private fun MainLayout(viewModel: SettingsViewModel, navController: NavControlle
             text = { Text(stringResource(R.string.noificationDialog_permission_needed_message)) },
             dismissButton = { OutlinedButton(onClick = { showNotificationPermissionNeeded.value = false }) { Text(stringResource(R.string.cancel)) } },
             confirmButton = { Button(onClick = { showNotificationPermissionNeeded.value = false; viewModel.openNotificationSettings() }) { Text(stringResource(R.string.settings)) } }
+        )
+    }
+
+    // SCHEDULE ALARMS PERMISSION NEEDED
+    if(showScheduleAlarmsPermissionNeeded.value){
+        AlertDialog(
+            onDismissRequest = {showScheduleAlarmsPermissionNeeded.value = false},
+            title = { Text(stringResource(R.string.schedule_exact_alarms_title)) },
+            text = { Text(stringResource(R.string.schedule_exact_alarms_message)) },
+            dismissButton = { OutlinedButton(onClick = { showScheduleAlarmsPermissionNeeded.value = false }) { Text(stringResource(R.string.cancel)) } },
+            confirmButton = { Button(onClick = { showScheduleAlarmsPermissionNeeded.value = false; viewModel.openExactAlarmSettings() }) { Text(stringResource(R.string.settings)) } }
         )
     }
 

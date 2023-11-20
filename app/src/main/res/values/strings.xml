@@ -113,8 +113,11 @@
     <string name="open_source_licenses">Open source licenses</string>
     <string name="source_code">Source code</string>
     <string name="app_version">App version</string>
-    <string name="noificationDialog_permission_needed">Permission needed</string>
+    <string name="noificationDialog_permission_needed">Notification permission needed</string>
     <string name="noificationDialog_permission_needed_message">Please allow the app to show notifications</string>
+    <string name="schedule_exact_alarms_title">Schedule alarms permission needed</string>
+    <string name="schedule_exact_alarms_message">Please allow the app to schedule exact alarms</string>
+    <string name="schedule_exact_alarms_toast">Please tap on EventTool and allow access</string>
 
     <!-- NOTIFICATIONS -->
     <string name="notification_title">%1$s in %2$dh</string>
