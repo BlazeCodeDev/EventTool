@@ -52,6 +52,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 private val eventType = mutableStateOf(EventType.UNKNOWN)
 
@@ -154,7 +155,7 @@ private fun MainLayout(viewModel: NewEventViewModel, navController: NavControlle
 private fun DatePickerLayout(viewModel: NewEventViewModel, context: Context){
     val showDialog = rememberSaveable { mutableStateOf(false) }
     val tempDate = rememberSaveable { mutableStateOf(viewModel.event.date) }
-    val state = rememberDatePickerState(initialSelectedDateMillis = tempDate.value.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
+    val state = rememberDatePickerState(initialSelectedDateMillis = tempDate.value.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli())
     val showDialogDateBefore = rememberSaveable { mutableStateOf(false) }
 
     Card (modifier = Modifier
