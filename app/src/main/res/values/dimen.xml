@@ -14,4 +14,6 @@
     <dimen name="small_padding">6dp</dimen>
     <dimen name="medium_padding">8dp</dimen>
     <dimen name="large_padding">16dp</dimen>
+    <dimen name="xlarge_padding">32dp</dimen>
+
 </resources>
