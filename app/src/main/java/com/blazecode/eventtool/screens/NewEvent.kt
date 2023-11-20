@@ -47,11 +47,11 @@ import com.blazecode.eventtool.util.MailUtil
 import com.blazecode.eventtool.util.PhoneUtil
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
 import com.google.accompanist.flowlayout.FlowRow
-import com.marosseleng.compose.material3.datetimepickers.date.domain.DatePickerDefaults
-import com.marosseleng.compose.material3.datetimepickers.date.ui.dialog.DatePickerDialog
 import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 
 private val eventType = mutableStateOf(EventType.UNKNOWN)
 
@@ -70,7 +70,9 @@ fun NewEvent(viewModel: NewEventViewModel = viewModel(), navController: NavContr
             topBar = { TopAppBar(viewModel, LocalContext.current, scrollBehavior) },
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             content = { paddingValues ->
-                Column(modifier = Modifier.padding(paddingValues).verticalScroll(rememberScrollState())) {
+                Column(modifier = Modifier
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())) {
                     MainLayout(viewModel, navController) }
             },
             floatingActionButton = { SaveFAB(viewModel, navController) }
@@ -147,20 +149,27 @@ private fun MainLayout(viewModel: NewEventViewModel, navController: NavControlle
 }
 
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun DatePickerLayout(viewModel: NewEventViewModel, context: Context){
     val showDialog = rememberSaveable { mutableStateOf(false) }
     val tempDate = rememberSaveable { mutableStateOf(viewModel.event.date) }
+    val state = rememberDatePickerState(initialSelectedDateMillis = tempDate.value.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
     val showDialogDateBefore = rememberSaveable { mutableStateOf(false) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).clickable { showDialog.value = true }){
-        Row (modifier = Modifier.fillMaxWidth().padding(12.dp)){
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .clickable { showDialog.value = true }){
+        Row (modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)){
 
             Text(stringResource(R.string.date), style = Typography.titleLarge,
             modifier = Modifier.weight(1f))
 
-            Box (modifier = Modifier.fillMaxWidth().weight(1f), Alignment.Center){
+            Box (modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f), Alignment.Center){
                 Text("${tempDate.value.dayOfMonth}." +
                         "${tempDate.value.monthValue}." +
                         "${tempDate.value.year}",
@@ -171,19 +180,28 @@ private fun DatePickerLayout(viewModel: NewEventViewModel, context: Context){
 
     if(showDialog.value){
         DatePickerDialog(
-            initialDate = tempDate.value,
-            typography = DatePickerDefaults.typography(
-                day = Typography.bodySmall,
-            ),
-            onDateChange = { date ->
-                tempDate.value = date
-                if(tempDate.value.isBefore(LocalDate.now())){
-                    showDialogDateBefore.value = true
-                } else viewModel.event.date = tempDate.value
-                showDialog.value = false
+            onDismissRequest = { showDialog.value = false },
+            confirmButton = {
+                Button(onClick = {
+                    tempDate.value = Instant.ofEpochMilli(state.selectedDateMillis!!).atZone(ZoneId.systemDefault()).toLocalDate()
+                    if(tempDate.value.isBefore(LocalDate.now())){
+                        showDialogDateBefore.value = true
+                    } else viewModel.event.date = tempDate.value
+                    showDialog.value = false
+                }) {
+                    Text(stringResource(R.string.confirm))
+                }
             },
-            onDismissRequest = { showDialog.value = false }
-        )
+            dismissButton = {
+                OutlinedButton(onClick = { showDialog.value = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        ) {
+            DatePicker(
+                state = state
+            )
+        }
     }
 
     if(showDialogDateBefore.value) {
@@ -209,7 +227,9 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
     val tempTimeEnd = remember { mutableStateOf(viewModel.event.timeEnd) }
 
     Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp)){
-        Column (modifier = Modifier.fillMaxWidth().padding(12.dp)){
+        Column (modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)){
             Text(stringResource(R.string.times), style = Typography.titleLarge)
 
             Row {
@@ -230,28 +250,36 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
             }
 
             Row {
-                Box (modifier = Modifier.weight(1f).clickable {
-                    showDialog.value = true
-                    timeType.value = TimeType.READY
-                }, Alignment.Center){
+                Box (modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        showDialog.value = true
+                        timeType.value = TimeType.READY
+                    }, Alignment.Center){
                     Text("${tempTimeReady.value}", fontSize = 18.sp, fontWeight = FontWeight.Medium)
                 }
-                Box (modifier = Modifier.weight(1f).clickable {
-                    showDialog.value = true
-                    timeType.value = TimeType.GUESTS
-                }, Alignment.Center){
+                Box (modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        showDialog.value = true
+                        timeType.value = TimeType.GUESTS
+                    }, Alignment.Center){
                     Text("${tempTimeGuests.value}", fontSize = 18.sp, fontWeight = FontWeight.Medium)
                 }
-                Box (modifier = Modifier.weight(1f).clickable {
-                    showDialog.value = true
-                    timeType.value = TimeType.START
-                }, Alignment.Center){
+                Box (modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        showDialog.value = true
+                        timeType.value = TimeType.START
+                    }, Alignment.Center){
                     Text("${tempTimeStart.value}", fontSize = 18.sp, fontWeight = FontWeight.Medium)
                 }
-                Box (modifier = Modifier.weight(1f).clickable {
-                    showDialog.value = true
-                    timeType.value = TimeType.END
-                }, Alignment.Center){
+                Box (modifier = Modifier
+                    .weight(1f)
+                    .clickable {
+                        showDialog.value = true
+                        timeType.value = TimeType.END
+                    }, Alignment.Center){
                     Text("${tempTimeEnd.value}", fontSize = 18.sp, fontWeight = FontWeight.Medium)
                 }
             }
@@ -344,7 +372,9 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
 private fun SimpleNameLayout(viewModel: NewEventViewModel) {
     val tempName = rememberSaveable { mutableStateOf(viewModel.event.name) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.name), style = Typography.titleLarge)
             OutlinedTextField(
@@ -363,7 +393,9 @@ private fun SimpleNameLayout(viewModel: NewEventViewModel) {
 private fun VenueLayout(viewModel: NewEventViewModel) {
     val tempVenue = rememberSaveable { mutableStateOf(viewModel.event.venue) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.venue), style = Typography.titleLarge)
             OutlinedTextField(
@@ -383,7 +415,9 @@ private fun VenueLayout(viewModel: NewEventViewModel) {
 private fun WishMusicLayout(viewModel: NewEventViewModel) {
     val tempWishMusic = rememberSaveable { mutableStateOf(viewModel.event.wishMusic) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.wish_music), style = Typography.titleLarge)
             OutlinedTextField(
@@ -402,7 +436,9 @@ private fun WishMusicLayout(viewModel: NewEventViewModel) {
 private fun CommentsLayout(viewModel: NewEventViewModel) {
     val tempComments = rememberSaveable { mutableStateOf(viewModel.event.comments) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.comments), style = Typography.titleLarge)
             OutlinedTextField(
@@ -422,7 +458,9 @@ private fun AdditionsLayout(viewModel: NewEventViewModel) {
     val allAdditions: MutableList<Additions> = Additions.values().toMutableList()
     val additions = rememberSaveable { mutableStateOf(viewModel.event.additions) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column(modifier = Modifier.padding(8.dp)) {
              Text(stringResource(R.string.additions), style = Typography.titleLarge)
              FlowRow () {
@@ -464,7 +502,9 @@ private fun GuestAmountLayout(viewModel: NewEventViewModel){
     val tempGuestAmount = rememberSaveable { mutableStateOf(viewModel.event.guestAmount) }
     val tempChildAmount = rememberSaveable { mutableStateOf(viewModel.event.childrenAmount) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.guests), style = Typography.titleLarge)
             Row {
@@ -495,7 +535,9 @@ private fun WeddingNameLayout(viewModel: NewEventViewModel){
     val tempFirstName2 = rememberSaveable { mutableStateOf(viewModel.event.firstName2) }
     val tempLastName = rememberSaveable { mutableStateOf(viewModel.event.lastName) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.names), style = Typography.titleLarge)
             Row {
@@ -533,7 +575,9 @@ private fun ContactLayout(viewModel: NewEventViewModel) {
     val sendMail = rememberSaveable { mutableStateOf(false) }
     val callNumber = rememberSaveable { mutableStateOf(false) }
 
-    Card (modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp).fillMaxWidth()) {
+    Card (modifier = Modifier
+        .padding(8.dp, 0.dp, 8.dp, 8.dp)
+        .fillMaxWidth()) {
         Column (modifier = Modifier.padding(12.dp)){
             Text(stringResource(R.string.contact), style = Typography.titleLarge)
             Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
@@ -623,7 +667,8 @@ private fun TopAppBarDropDown(viewModel: NewEventViewModel, context: Context){
     var menuExpanded by remember { mutableStateOf(false) }
     val eventTypeList = EventType.values()
 
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size))
+    Box(contentAlignment = Alignment.Center, modifier = Modifier
+        .size(dimensionResource(R.dimen.icon_button_size))
         .clickable { menuExpanded = !menuExpanded }) {
         Icon(painterResource(R.drawable.ic_expand_more), "change event type")
         DropdownMenu(
