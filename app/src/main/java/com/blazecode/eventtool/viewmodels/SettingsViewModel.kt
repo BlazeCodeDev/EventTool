@@ -19,6 +19,7 @@ import com.blazecode.eventtool.R
 import com.blazecode.eventtool.database.DataBaseExporter
 import com.blazecode.eventtool.database.DataBaseImporter
 import com.blazecode.eventtool.database.EventRepository
+import com.blazecode.eventtool.reminders.ReminderManager
 import com.blazecode.eventtool.util.DataStoreManager
 import com.blazecode.eventtool.util.NotificationManager
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +29,8 @@ import kotlinx.coroutines.launch
 class SettingsViewModel (app: Application): AndroidViewModel(app){
 
     val notificationManager = NotificationManager()
+    val scope = viewModelScope
+    val reminderManager = ReminderManager()
     val UPDATE_TAG = "update"
 
     // NOTIFICATIONS
@@ -72,6 +75,9 @@ class SettingsViewModel (app: Application): AndroidViewModel(app){
         dataStoreManager.setRemindersEnabled(context, enabled)
         if(enabled) {
             notificationManager.createReminderChannel(context)
+            scope.launch(Dispatchers.IO) {
+                reminderManager.scheduleAll(context, EventRepository().getEventList(context))
+            }
         } else notificationManager.removeReminderChannel(context)
     }
 
