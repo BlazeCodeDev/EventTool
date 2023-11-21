@@ -59,30 +59,27 @@ fun EventDetails(printer: PdfPrinter, event: Event, onEdit: () -> Unit, onClose:
                 val eventColor = colorResource(context.resources.getIdentifier(event.eventType.toString().lowercase(), "color", context.packageName))
                 val onBackgroundColor = MaterialTheme.colorScheme.onBackground
 
-                if (event.eventType != EventType.RESERVED) {
-                    Text(
-                        text = ("$name\n$eventType"),
-                        fontSize = 25.sp,
-                        modifier = Modifier.weight(5f)
-                            .graphicsLayer(alpha = 0.99f)
-                            .drawWithCache {
-                                val brush = Brush.horizontalGradient(listOf(eventColor, onBackgroundColor))
-                                onDrawWithContent {
-                                    drawContent()
-                                    drawRect(brush, blendMode = BlendMode.SrcAtop)
-                                }
-                            })
-                    Box(
-                        modifier = Modifier
-                            .size(dimensionResource(R.dimen.icon_button_size))
-                            .weight(1f)
-                    ) {
-                        IconButton(onClick = { printer.print(event) }) {
-                            Icon(painterResource(R.drawable.ic_print), "settings")
-                        }
+                val title = if (event.eventType == EventType.RESERVED) event.comments else name
+                Text(
+                    text = ("$title\n$eventType"),
+                    fontSize = 25.sp,
+                    modifier = Modifier.weight(5f)
+                        .graphicsLayer(alpha = 0.99f)
+                        .drawWithCache {
+                            val brush = Brush.horizontalGradient(listOf(eventColor, onBackgroundColor))
+                            onDrawWithContent {
+                                drawContent()
+                                drawRect(brush, blendMode = BlendMode.SrcAtop)
+                            }
+                        })
+                Box(
+                    modifier = Modifier
+                        .size(dimensionResource(R.dimen.icon_button_size))
+                        .weight(1f)
+                ) {
+                    IconButton(onClick = { printer.print(event) }) {
+                        Icon(painterResource(R.drawable.ic_print), "settings")
                     }
-                } else {
-                    Text(text = ("${event.comments}\n$eventType"), modifier = Modifier.weight(5f))
                 }
 
             }
