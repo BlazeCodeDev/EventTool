@@ -231,7 +231,8 @@ private fun CalendarView(navController: NavController, eventList: MutableList<Ev
                         break
                     }
                 }
-                Day(day, day.date.equals(LocalDate.now()), eventType) { clicked ->
+                val dayList = eventList.filter { it.date == day.date }.map { it.eventType }
+                Day(day, day.date.equals(LocalDate.now()), dayList) { clicked ->
                     openCalendarTap.value = true; calendarTapDate.value = day.date
                 } },
             monthHeader = { DaysOfWeekTitle(daysOfWeek = daysOfWeek) }
@@ -275,13 +276,20 @@ private fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
 }
 
 @Composable
-private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onClick: (CalendarDay) -> Unit) {
+private fun Day(day: CalendarDay, isToday: Boolean, eventList: List<EventType> , onClick: (CalendarDay) -> Unit) {
     val context = LocalContext.current
     val backgroundColor = remember { mutableStateOf(Color.Unspecified) }
+    val backgroundColor1 = remember { mutableStateOf(Color.Unspecified) }
+    val backgroundColor2 = remember { mutableStateOf(Color.Unspecified) }
 
-    if(eventType != null) {
+    if(eventList.isNotEmpty()) {
         if(colorfulDaysEnabled.value) {
-            backgroundColor.value = Color(context.resources.getColor(context.resources.getIdentifier("${eventType.toString().lowercase()}_full", "color", context.packageName)))
+            if(eventList.size == 1) {
+                backgroundColor.value = Color(context.resources.getColor(context.resources.getIdentifier("${eventList[0].toString().lowercase()}_full", "color", context.packageName), null))
+            } else if (eventList.size == 2) {
+                backgroundColor1.value = Color(context.resources.getColor(context.resources.getIdentifier("${eventList[0].toString().lowercase()}_full", "color", context.packageName), null))
+                backgroundColor2.value = Color(context.resources.getColor(context.resources.getIdentifier("${eventList[1].toString().lowercase()}_full", "color", context.packageName), null))
+            }
         } else {
             backgroundColor.value = MaterialTheme.colorScheme.primary
         }
@@ -291,11 +299,19 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onCl
         backgroundColor.value = Color.Unspecified
     }
 
+    // BACKGROUND COLORS
+    var colorList: List<Color>
+    if(eventList.size == 1){
+        colorList = listOf(backgroundColor.value, backgroundColor.value)
+    } else {
+        colorList = listOf(backgroundColor1.value, backgroundColor2.value)
+    }
+
     Box(Modifier
         .aspectRatio(1.3f) // This is important for square-sizing!
         .padding(5.dp)
         .clip(CircleShape)
-        .background(color = backgroundColor.value)
+        .background (Brush.horizontalGradient(colorList))
         .clickable(
             enabled = true,
             onClick = { onClick(day) }
@@ -303,14 +319,22 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventType: EventType? , onCl
         contentAlignment = Alignment.Center
     ) {
         val textColor: Color?
-        if(eventType != null && colorfulDaysEnabled.value){
-            val color = backgroundColor.value.toArgb()
-            textColor = if(color.red > 125 || color.green > 125 || color.blue > 125){
+        if(eventList.isNotEmpty() && colorfulDaysEnabled.value){
+            val color = backgroundColor.value
+            val color1 = backgroundColor1.value
+            val color2 = backgroundColor2.value
+            var averageColor: Color
+            if(color.red < 1 && color.green < 1 && color.blue < 1){     // CHECK IF COLOR IS BLACK -> LIST HAS ONE THEN ONE ELEMENT
+                averageColor = Color((color1.red + color2.red) / 2, (color1.green + color2.green) / 2, (color1.blue + color2.blue) / 2)
+            } else {
+                averageColor = color
+            }
+            textColor = if(averageColor.red > 0.6 || averageColor.green > 0.6 || averageColor.blue > 0.6){
                 Color.Black
             } else {
                 Color.White
             }
-        } else if(eventType != null){
+        } else if(eventList.isNotEmpty()){
             textColor = MaterialTheme.colorScheme.onPrimary
         } else {
             textColor = MaterialTheme.colorScheme.onBackground
