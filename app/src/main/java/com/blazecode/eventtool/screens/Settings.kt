@@ -102,17 +102,17 @@ private fun MainLayout(viewModel: SettingsViewModel, navController: NavControlle
                         scope.launch { viewModel.setRemindersEnabled(context, true) }
                     }
 
-                    if(!viewModel.canScheduleExactAlarms()){
-                        remindersEnabled.value = false
-                        showScheduleAlarmsPermissionNeeded.value = true
-                    }
-
                     if(hasNotificationPermission.status.shouldShowRationale){
                         remindersEnabled.value = false
                         showNotificationPermissionNeeded.value = true
                     } else if (!hasNotificationPermission.status.isGranted){
                         remindersEnabled.value = false
                         hasNotificationPermission.launchPermissionRequest()
+                    }
+
+                    if(!viewModel.canScheduleExactAlarms()){
+                        remindersEnabled.value = false
+                        showScheduleAlarmsPermissionNeeded.value = true
                     }
                 } else {
                     remindersEnabled.value = false
