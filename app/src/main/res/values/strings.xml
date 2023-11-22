@@ -89,6 +89,7 @@
     <string name="please_enter_min_req">Please enter at least Name, Venue, Date and one way of contacting</string>
     <string name="date_is_in_past">The selected date lies in the past</string>
     <string name="time_is_in_past">The selected time lies in the past</string>
+    <string name="too_many_events_on_date">There are already 2 or more events on this date</string>
     <string name="save_anyway">Save Anyway</string>
 
     <!-- DIALOGS -->

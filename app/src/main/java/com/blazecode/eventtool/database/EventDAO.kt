@@ -11,6 +11,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.blazecode.eventtool.data.Event
+import java.time.LocalDate
 
 @Dao
 interface EventDAO {
@@ -33,6 +34,9 @@ interface EventDAO {
             "OR venue LIKE :name " +
             "OR comments LIKE :name ")
     fun getEventsByName(name: String): MutableList<Event>
+
+    @Query("SELECT * FROM Event WHERE date LIKE :date")
+    fun getEventsByDate(date: LocalDate): MutableList<Event>
 
     @Query("DELETE FROM Event WHERE id LIKE :id")
     fun deleteById(id: Int)

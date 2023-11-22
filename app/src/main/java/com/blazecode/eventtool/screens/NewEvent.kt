@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.enums.Additions
 import com.blazecode.eventtool.enums.EventType
 import com.blazecode.eventtool.enums.TimeType
@@ -48,6 +49,7 @@ import com.blazecode.eventtool.util.PhoneUtil
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -368,7 +370,6 @@ private fun TimePickerLayout(viewModel: NewEventViewModel, context: Context){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SimpleNameLayout(viewModel: NewEventViewModel) {
     val tempName = rememberSaveable { mutableStateOf(viewModel.event.name) }
@@ -389,7 +390,6 @@ private fun SimpleNameLayout(viewModel: NewEventViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun VenueLayout(viewModel: NewEventViewModel) {
     val tempVenue = rememberSaveable { mutableStateOf(viewModel.event.venue) }
@@ -411,7 +411,6 @@ private fun VenueLayout(viewModel: NewEventViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WishMusicLayout(viewModel: NewEventViewModel) {
     val tempWishMusic = rememberSaveable { mutableStateOf(viewModel.event.wishMusic) }
@@ -432,7 +431,6 @@ private fun WishMusicLayout(viewModel: NewEventViewModel) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CommentsLayout(viewModel: NewEventViewModel) {
     val tempComments = rememberSaveable { mutableStateOf(viewModel.event.comments) }
@@ -497,7 +495,6 @@ private fun getAddition(value: String): Additions? {
     return map[value]
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GuestAmountLayout(viewModel: NewEventViewModel){
     val tempGuestAmount = rememberSaveable { mutableStateOf(viewModel.event.guestAmount) }
@@ -529,7 +526,6 @@ private fun GuestAmountLayout(viewModel: NewEventViewModel){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WeddingNameLayout(viewModel: NewEventViewModel){
     val tempFirstName1 = rememberSaveable { mutableStateOf(viewModel.event.firstName1) }
@@ -567,7 +563,6 @@ private fun WeddingNameLayout(viewModel: NewEventViewModel){
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ContactLayout(viewModel: NewEventViewModel) {
     val tempEmail = rememberSaveable { mutableStateOf(viewModel.event.email) }
@@ -692,6 +687,8 @@ private fun TopAppBarDropDown(viewModel: NewEventViewModel, context: Context){
 private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
     val context = LocalContext.current
     val showErrorDialog = rememberSaveable { mutableStateOf(false) }
+    val showTooManyEventsDialog = rememberSaveable { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
     val save = rememberSaveable { mutableStateOf(false) }
 
     ExtendedFloatingActionButton(
@@ -700,18 +697,32 @@ private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
         onClick = { save.value = true },
         elevation = FloatingActionButtonDefaults.elevation(8.dp))
 
-    if(save.value){
-        // INPUT RULES
-        if((viewModel.event.date != LocalDate.now() && (viewModel.event.name.isNotEmpty() || viewModel.event.lastName.isNotEmpty()) &&
-            viewModel.event.venue.isNotEmpty() && (viewModel.event.email.isNotEmpty() || viewModel.event.phone.isNotEmpty())) ||
-            viewModel.event.eventType == EventType.RESERVED) {
+    LaunchedEffect(save.value){
+        if(save.value){
+            var eventsOnDate = mutableListOf<Event>()
+            scope.launch {
+                eventsOnDate = viewModel.getEventsOnDate(viewModel.event.date)
+            }.join()
 
-            viewModel.saveEvent()
-            navController.popBackStack()
-        } else {
-            showErrorDialog.value = true
+            // CHECK FOR TOO MANY EVENTS
+            if (eventsOnDate.size >= 2) {
+                showTooManyEventsDialog.value = true
+            } else {
+                // INPUT RULES
+                if((viewModel.event.date != LocalDate.now() && (viewModel.event.name.isNotEmpty() || viewModel.event.lastName.isNotEmpty()) &&
+                            viewModel.event.venue.isNotEmpty() && (viewModel.event.email.isNotEmpty() || viewModel.event.phone.isNotEmpty())) ||
+                    viewModel.event.eventType == EventType.RESERVED) {
+
+                    viewModel.saveEvent()
+                    navController.popBackStack()
+
+                } else {
+                    showErrorDialog.value = true
+                }
+            }
+
+            save.value = false
         }
-        save.value = false
     }
 
     if(showErrorDialog.value){
@@ -721,6 +732,15 @@ private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
             text = { Text(stringResource(R.string.please_enter_min_req)) },
             dismissButton = { OutlinedButton(onClick = { showErrorDialog.value = false; viewModel.saveEvent(); navController.popBackStack() }) { Text(stringResource(R.string.save_anyway)) } },
             confirmButton = { Button(onClick = { showErrorDialog.value = false }) { Text(stringResource(R.string.cancel)) } }
+        )
+    }
+
+    if (showTooManyEventsDialog.value){
+        AlertDialog(
+            onDismissRequest = {showTooManyEventsDialog.value = false},
+            title = { Text(stringResource(R.string.error)) },
+            text = { Text(stringResource(R.string.too_many_events_on_date)) },
+            confirmButton = { Button(onClick = { showTooManyEventsDialog.value = false }) { Text(stringResource(R.string.close)) } },
         )
     }
 }
