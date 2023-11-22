@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
@@ -35,9 +36,10 @@ var errorDialogMessage = mutableStateOf("")
 var notificationTapEvent = mutableStateOf<Event?>(null)
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
 
         // HACKY WAY TO PREVENT WHITE SCREEN BETWEEN TRANSITIONS
         lifecycleScope.launch {
