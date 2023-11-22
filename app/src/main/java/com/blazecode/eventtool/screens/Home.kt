@@ -34,9 +34,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.blue
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
@@ -53,6 +50,7 @@ import com.blazecode.eventtool.util.NotificationManager
 import com.blazecode.eventtool.util.pdf.PdfPrinter
 import com.blazecode.eventtool.viewmodels.HomeViewModel
 import com.blazecode.eventtool.views.DefaultPreference
+import com.blazecode.eventtool.views.DoubleEventDialog
 import com.blazecode.eventtool.views.EventDetails
 import com.blazecode.eventtool.views.EventListItem
 import com.blazecode.eventtool.views.SwitchPreference
@@ -67,12 +65,14 @@ import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
 
-private var showDialog = mutableStateOf(false)
-private var showEventDetails = mutableStateOf(false)
-private var eventDetailsEvent = mutableStateOf(Event(null))
+private val showCreateEventDialog = mutableStateOf(false)
+private val showEventDetails = mutableStateOf(false)
+private val showDoubleEventDialog = mutableStateOf(false)
+private val eventDetailsEvent = mutableStateOf(Event(null))
 private val isDialogVisible = mutableStateOf(false)
 
 private val tappedDate = mutableStateOf( LocalDate.now() )
+private val dayList = mutableStateOf( mutableListOf<Event>() )
 
 private val colorfulDaysEnabled = mutableStateOf(false)
 private val debugUpdateCheckEnabled = mutableStateOf(false)
@@ -99,7 +99,7 @@ fun Home(viewModel: HomeViewModel = viewModel(), navController: NavController, p
         // A surface container using the 'background' color from the theme
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
 
-            if(showDialog.value) EventTypeChooser(navController, tappedDate.value)
+            if(showCreateEventDialog.value) EventTypeChooser(navController, tappedDate.value)
             if(showEventDetails.value)
                 EventDetails(
                     printer = printer,
@@ -123,6 +123,16 @@ fun Home(viewModel: HomeViewModel = viewModel(), navController: NavController, p
                         MainLayout(viewModel, navController)
                     }
                 })
+
+            if(showDoubleEventDialog.value) {
+                DoubleEventDialog(
+                    context = context,
+                    eventList = dayList.value,
+                    onDismiss = { showDoubleEventDialog.value = false },
+                    onClickEvent1 = { showDoubleEventDialog.value = false; eventDetailsEvent.value = dayList.value[0]; showEventDetails.value = true },
+                    onClickEvent2 = { showDoubleEventDialog.value = false; eventDetailsEvent.value = dayList.value[1]; showEventDetails.value = true }
+                )
+            }
         }
     }
 }
@@ -239,26 +249,22 @@ private fun CalendarView(navController: NavController, eventList: MutableList<Ev
         )
     }
 
-    if(openCalendarTap.value) CalendarTap(navController, calendarTapDate.value, eventList); openCalendarTap.value = false
+    if(openCalendarTap.value) CalendarTap(calendarTapDate.value, eventList); openCalendarTap.value = false
 }
 
 @Composable
-private fun CalendarTap(navController: NavController,date: LocalDate, eventList: MutableList<Event>) {
-    var foundEvent = Event(null)
+private fun CalendarTap(date: LocalDate, eventList: MutableList<Event>) {
+    val tempDayList = eventList.filter { it.date == date }
 
-    for (event in eventList){
-        if(date.isEqual(event.date)){
-            foundEvent = event
-            break
-        }
-    }
-
-    if(foundEvent.id == null){
-        showDialog.value = true
-        tappedDate.value = date
-    } else {
-        eventDetailsEvent.value = foundEvent
+    if(tempDayList.size == 1){
+        eventDetailsEvent.value = tempDayList[0]
         showEventDetails.value = true
+    } else if(tempDayList.size == 2){
+        dayList.value = tempDayList.toMutableList()
+        showDoubleEventDialog.value = true
+    } else {
+        tappedDate.value = date
+        showCreateEventDialog.value = true
     }
 }
 
@@ -311,7 +317,7 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventList: List<EventType> ,
         .aspectRatio(1.3f) // This is important for square-sizing!
         .padding(5.dp)
         .clip(CircleShape)
-        .background (Brush.horizontalGradient(colorList))
+        .background(Brush.horizontalGradient(colorList))
         .clickable(
             enabled = true,
             onClick = { onClick(day) }
@@ -486,7 +492,7 @@ private fun DebugDialog(viewModel: HomeViewModel){
 private fun EventTypeChooser(navController: NavController, date: LocalDate?){
     val context = LocalContext.current
     val eventType: MutableState<EventType?> = rememberSaveable { mutableStateOf(null) }
-    val showDialog = rememberSaveable { showDialog }
+    val showDialog = rememberSaveable { showCreateEventDialog }
 
     if(showDialog.value) {
         AlertDialog(
@@ -528,6 +534,6 @@ private fun AddEventFAB(){
     ExtendedFloatingActionButton(
         icon = { Icon(Icons.Filled.Add,"") },
         text = { Text(stringResource(R.string.add_event)) },
-        onClick = { showDialog.value = true; tappedDate.value = LocalDate.now() },
+        onClick = { showCreateEventDialog.value = true; tappedDate.value = LocalDate.now() },
         elevation = FloatingActionButtonDefaults.elevation(8.dp))
 }
