@@ -301,7 +301,7 @@ private fun Day(day: CalendarDay, isToday: Boolean, eventList: List<EventType> ,
 
     // BACKGROUND COLORS
     var colorList: List<Color>
-    if(eventList.size == 1){
+    if(eventList.size == 1 || !colorfulDaysEnabled.value){
         colorList = listOf(backgroundColor.value, backgroundColor.value)
     } else {
         colorList = listOf(backgroundColor1.value, backgroundColor2.value)
