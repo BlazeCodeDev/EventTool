@@ -24,8 +24,24 @@ import com.blazecode.eventtool.ui.theme.EventToolTheme
 
 @Composable
 fun DoubleEventDialog(context: Context, eventList: MutableList<Event>, onDismiss : () -> Unit, onClickEvent1 : () -> Unit, onClickEvent2 : () -> Unit) {
-    val eventName1 = if(eventList[0].eventType == EventType.WEDDING) "${eventList[0].firstName1} / ${eventList[0].firstName2} ${eventList[0].lastName}" else eventList[0].name
-    val eventName2 = if(eventList[1].eventType == EventType.WEDDING) "${eventList[1].firstName1} / ${eventList[1].firstName2} ${eventList[1].lastName}" else eventList[1].name
+    val eventName1 =
+        if(eventList[0].eventType == EventType.WEDDING) {
+            "${eventList[0].firstName1} / ${eventList[0].firstName2} ${eventList[0].lastName}"
+        } else if(eventList[0].eventType == EventType.RESERVED) {
+            eventList[0].comments
+        } else {
+            eventList[0].name
+        }
+
+    val eventName2 =
+        if(eventList[1].eventType == EventType.WEDDING) {
+            "${eventList[1].firstName1} / ${eventList[1].firstName2} ${eventList[1].lastName}"
+        } else if(eventList[1].eventType == EventType.RESERVED) {
+            eventList[1].comments
+        } else {
+            eventList[1].name
+        }
+
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text(stringResource(R.string.multiple_events_found)) },
