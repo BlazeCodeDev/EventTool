@@ -14,8 +14,8 @@ android {
         applicationId = "com.blazecode.eventtool"
         minSdk = 33
         targetSdk = 34
-        versionCode = 18
-        versionName = "1.3.1"
+        versionCode = 19
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
