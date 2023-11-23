@@ -7,14 +7,14 @@
 
 <resources>
     <string name="app_name">EventTool</string>
-    <string name="add_event">Veranstaltung hinzufügen</string>
+    <string name="add_event">Event hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
     <string name="add">Hinzufügen</string>
     <string name="search">Suche</string>
     <string name="search_hint">Suche Namen, Orte etc</string>
-    <string name="multiple_events_found">Mehrere Veranstaltungen gefunden</string>
-    <string name="choose_event_type">Veranstaltungsart auswählen</string>
+    <string name="choose_event">Event auswählen</string>
+    <string name="choose_event_type">Eventart auswählen</string>
     <string name="birthday">Geburtstag</string>
     <string name="wedding">Hochzeit</string>
     <string name="company_event">Corporate Event</string>
@@ -54,7 +54,7 @@
     <string name="email_empty">E-Mail ist leer</string>
     <string name="error">Fehler</string>
     <string name="please_enter_min_req">Bitte mindestens Namen, Veranstaltungsort, Datum und eine Kontaktart angeben</string>
-    <string name="too_many_events_on_date">Es sind bereits zwei oder mehr Veranstaltungen an diesem Datum hinterlegt</string>
+    <string name="too_many_events_on_date">Es sind bereits zwei oder mehr Events an diesem Datum hinterlegt</string>
     <string name="save_anyway">Trotzdem Speichern</string>
     <string name="phone">Telefon</string>
     <string name="phone_empty">Telefonnummer ist leer</string>

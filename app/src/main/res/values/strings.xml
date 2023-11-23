@@ -25,7 +25,7 @@
     <string name="confirm">Confirm</string>
     <string name="search">Search</string>
     <string name="search_hint">Search names, venues etc</string>
-    <string name="multiple_events_found">Multiple events found</string>
+    <string name="choose_event">Choose event</string>
 
     <!-- EVENT TYPES -->
     <string name="choose_event_type">Choose Event Type</string>
@@ -89,7 +89,7 @@
     <string name="please_enter_min_req">Please enter at least Name, Venue, Date and one way of contacting</string>
     <string name="date_is_in_past">The selected date lies in the past</string>
     <string name="time_is_in_past">The selected time lies in the past</string>
-    <string name="too_many_events_on_date">There are already 2 or more events on this date</string>
+    <string name="too_many_events_on_date">There are already two or more events on this date</string>
     <string name="save_anyway">Save Anyway</string>
 
     <!-- DIALOGS -->
