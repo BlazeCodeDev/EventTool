@@ -15,6 +15,7 @@ import com.blazecode.eventtool.enums.EventType
 import com.blazecode.eventtool.reminders.ReminderManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class NewEventViewModel(app: Application, val event: Event): AndroidViewModel(app) {
     val repository = EventRepository()
@@ -34,6 +35,14 @@ class NewEventViewModel(app: Application, val event: Event): AndroidViewModel(ap
             repository.saveEvent(getApplication(), event)
             reminderManager.schedule(getApplication(), event)
         }
+    }
+
+    suspend fun getEventsOnDate(date: LocalDate): MutableList<Event> {
+        var tempList = mutableListOf<Event>()
+        val job = viewModelScope.launch(Dispatchers.IO) {
+            tempList = repository.getEventsByDate(getApplication(), date)
+        }.join()
+        return tempList
     }
 
     fun deleteEvent(){

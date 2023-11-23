@@ -7,13 +7,14 @@
 
 <resources>
     <string name="app_name">EventTool</string>
-    <string name="add_event">Veranstaltung hinzufügen</string>
+    <string name="add_event">Event hinzufügen</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
     <string name="add">Hinzufügen</string>
     <string name="search">Suche</string>
-    <string name="search_hint">Suche Namen oder Datum</string>
-    <string name="choose_event_type">Veranstaltungsart auswählen</string>
+    <string name="search_hint">Suche Namen, Orte etc</string>
+    <string name="choose_event">Event auswählen</string>
+    <string name="choose_event_type">Eventart auswählen</string>
     <string name="birthday">Geburtstag</string>
     <string name="wedding">Hochzeit</string>
     <string name="company_event">Corporate Event</string>
@@ -47,11 +48,13 @@
     <string name="moving_head">Moving Lights</string>
     <string name="video_player">Video Player</string>
     <string name="time_end">Ende</string>
+    <string name="xxl_letters">XXL Buchstaben</string>
     <string name="contact">Kontakt</string>
     <string name="email">E-Mail</string>
     <string name="email_empty">E-Mail ist leer</string>
     <string name="error">Fehler</string>
     <string name="please_enter_min_req">Bitte mindestens Namen, Veranstaltungsort, Datum und eine Kontaktart angeben</string>
+    <string name="too_many_events_on_date">Es sind bereits zwei oder mehr Events an diesem Datum hinterlegt</string>
     <string name="save_anyway">Trotzdem Speichern</string>
     <string name="phone">Telefon</string>
     <string name="phone_empty">Telefonnummer ist leer</string>
@@ -89,6 +92,11 @@
     <string name="appearance">Erscheinungsbild</string>
     <string name="colorful_calendar_days">Farbige Kalendertage</string>
     <string name="time_is_in_past">Die gewählte Zeit liegt in der Vergangenheit</string>
+    <string name="noificationDialog_permission_needed">Berechtigung für Benachrichtigungen benötigt</string>
+    <string name="noificationDialog_permission_needed_message">Bitte erlaube der App Benachrichtigungen zu senden</string>
+    <string name="schedule_exact_alarms_title">Berechtigung für Wecker und Erinnerungen benötigt</string>
+    <string name="schedule_exact_alarms_message">Bitte erlaube der App Erinnerungen einzustellen</string>
+    <string name="schedule_exact_alarms_toast">Tippe auf EventTool und erlaube den Zugriff</string>
     <string name="notification_title">%1$s in %2$dh</string>
     <string name="general">Allgemein</string>
     <string name="event_reminders">Event Erinnerungen</string>
@@ -97,4 +105,8 @@
     <string name="update_available">Update %s verfügbar</string>
     <string name="download">Herunterladen</string>
     <string name="reserved">Reserviert</string>
+    <string name="send">Senden</string>
+    <string name="error_report_title">Ups, etwas ist schief gelaufen</string>
+    <string name="error_user_comment">Kommentar</string>
+    <string name="error_user_email">Deine E-Mail Adresse (optional)</string>
 </resources>

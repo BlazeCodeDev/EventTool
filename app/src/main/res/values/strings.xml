@@ -9,6 +9,7 @@
     <string name="send_email">Send E-Mail</string>
     <string name="email_address">E-Mail Address</string>
 
+    <!-- NAVIGATION -->
     <string name="add_event">Add Event</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
@@ -23,8 +24,10 @@
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
     <string name="search">Search</string>
-    <string name="search_hint">Search names or date</string>
+    <string name="search_hint">Search names, venues etc</string>
+    <string name="choose_event">Choose event</string>
 
+    <!-- EVENT TYPES -->
     <string name="choose_event_type">Choose Event Type</string>
     <string name="event_type">Event Type</string>
     <string name="unknown">Unknown</string>
@@ -36,6 +39,7 @@
     <string name="folkfest">Public Event</string>
     <string name="rental">Rental</string>
 
+    <!-- EVENT DETAILS -->
     <string name="date">Date</string>
 
     <string name="name">Name</string>
@@ -44,9 +48,7 @@
     <string name="last_name">Last Name</string>
 
     <string name="venue">Venue</string>
-
     <string name="wish_music">Wish Music</string>
-
     <string name="comments">Comments</string>
 
     <string name="times">Times</string>
@@ -60,6 +62,7 @@
     <string name="guests_total">Total</string>
     <string name="guests_children">Children</string>
 
+    <!-- ADDITIONS -->
     <string name="additions">Additions</string>
     <string name="fotobox">Fotobox</string>
     <string name="sparkler">Sparkler</string>
@@ -72,23 +75,34 @@
     <string name="mirror_ball">Mirror Ball</string>
     <string name="moving_head">Moving Lights</string>
     <string name="video_player">Video Player</string>
+    <string name="xxl_letters">XXL Letters</string>
 
+    <!-- CONTACT -->
     <string name="contact">Contact</string>
     <string name="email">E-Mail</string>
     <string name="email_empty">E-Mail is empty</string>
     <string name="phone">Phone</string>
     <string name="phone_empty">Phone number is empty</string>
 
+    <!-- ERRORS -->
     <string name="error">Error</string>
     <string name="please_enter_min_req">Please enter at least Name, Venue, Date and one way of contacting</string>
     <string name="date_is_in_past">The selected date lies in the past</string>
     <string name="time_is_in_past">The selected time lies in the past</string>
+    <string name="too_many_events_on_date">There are already two or more events on this date</string>
     <string name="save_anyway">Save Anyway</string>
 
+    <!-- DIALOGS -->
     <string name="upcoming_events">Upcoming Events</string>
     <string name="event_details">Event Details</string>
 
+    <!-- SETTINGS -->
     <string name="settings">Settings</string>
+    <string name="general">General</string>
+    <string name="event_reminders">Event reminders</string>
+    <string name="event_reminders_summary">Remind you %sh before time ready</string>
+    <string name="appearance">Appearance</string>
+    <string name="colorful_calendar_days">Colorful calendar days</string>
     <string name="data">Data</string>
     <string name="export_data">Export Data</string>
     <string name="export_successful">Export successful</string>
@@ -97,21 +111,27 @@
     <string name="import_successful">Import successful</string>
     <string name="import_error">Import error</string>
     <string name="import_dialog_message">This will replace all existing data, this cannot be undone</string>
-
-    <string name="notification_title">%1$s in %2$dh</string>
-
-    <string name="general">General</string>
-    <string name="event_reminders">Event reminders</string>
-    <string name="event_reminders_summary">Remind you %sh before time ready</string>
-    <string name="appearance">Appearance</string>
-    <string name="colorful_calendar_days">Colorful calendar days</string>
     <string name="about">About</string>
-    <string name="source_code">Source code</string>
     <string name="open_source_licenses">Open source licenses</string>
+    <string name="source_code">Source code</string>
     <string name="app_version">App version</string>
+    <string name="noificationDialog_permission_needed">Notification permission needed</string>
+    <string name="noificationDialog_permission_needed_message">Please allow the app to show notifications</string>
+    <string name="schedule_exact_alarms_title">Schedule alarms permission needed</string>
+    <string name="schedule_exact_alarms_message">Please allow the app to schedule exact alarms</string>
+    <string name="schedule_exact_alarms_toast">Please tap on EventTool and allow access</string>
 
+    <!-- NOTIFICATIONS -->
+    <string name="notification_title">%1$s in %2$dh</string>
     <string name="reminders_channel">Reminders</string>
 
+    <!-- UPDATE -->
     <string name="update_available">Update %s available</string>
     <string name="download">Download</string>
+
+    <!-- ERROR REPORT -->
+    <string name="send">Send</string>
+    <string name="error_report_title">Whoops, something went wrong</string>
+    <string name="error_user_comment">Comment</string>
+    <string name="error_user_email">Your E-Mail adress (optional)</string>
 </resources>

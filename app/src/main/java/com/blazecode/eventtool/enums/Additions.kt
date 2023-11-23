@@ -17,5 +17,6 @@ enum class Additions {
     CANVAS,
     MIRROR_BALL,
     MOVING_HEAD,
-    VIDEO_PLAYER
+    VIDEO_PLAYER,
+    XXL_LETTERS
 }

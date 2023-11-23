@@ -6,6 +6,7 @@
 
 package com.blazecode.eventtool.screens
 
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -34,17 +35,20 @@ import com.blazecode.eventtool.database.DataBaseImporter
 import com.blazecode.eventtool.navigation.NavRoutes
 import com.blazecode.eventtool.ui.theme.EventToolTheme
 import com.blazecode.eventtool.ui.theme.Typography
-import com.blazecode.eventtool.util.PermissionManager
 import com.blazecode.eventtool.viewmodels.SettingsViewModel
 import com.blazecode.eventtool.views.DefaultPreference
 import com.blazecode.eventtool.views.PreferenceGroup
 import com.blazecode.eventtool.views.SwitchPreference
 import com.blazecode.scrapguidev2.util.LinkUtil
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+import com.google.accompanist.permissions.shouldShowRationale
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Settings(viewModel: SettingsViewModel = viewModel(), navController: NavController, permissionManager: PermissionManager, exporter: DataBaseExporter, importer: DataBaseImporter) {
+fun Settings(viewModel: SettingsViewModel = viewModel(), navController: NavController, exporter: DataBaseExporter, importer: DataBaseImporter) {
 
     EventToolTheme {
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -52,19 +56,25 @@ fun Settings(viewModel: SettingsViewModel = viewModel(), navController: NavContr
             topBar = { TopAppBar(viewModel, LocalContext.current, scrollBehavior, navController) },
             modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
             content = { paddingValues ->
-                Column(modifier = Modifier.padding(paddingValues).verticalScroll(rememberScrollState())) {
-                    MainLayout(viewModel, navController, permissionManager, exporter, importer)
+                Column(modifier = Modifier
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())) {
+                    MainLayout(viewModel, navController, exporter, importer)
                 }
             },
         )
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun MainLayout(viewModel: SettingsViewModel, navController: NavController, permissionManager: PermissionManager, exporter: DataBaseExporter, importer: DataBaseImporter){
+private fun MainLayout(viewModel: SettingsViewModel, navController: NavController, exporter: DataBaseExporter, importer: DataBaseImporter){
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val showImportDialog = rememberSaveable{ mutableStateOf(false) }
+    val showNotificationPermissionNeeded = rememberSaveable{ mutableStateOf(false) }
+    val showScheduleAlarmsPermissionNeeded = rememberSaveable{ mutableStateOf(false) }
+    val hasNotificationPermission = rememberPermissionState(POST_NOTIFICATIONS)
 
     val remindersEnabled = rememberSaveable{ mutableStateOf(false) }
     val colorfulCalendarDays = rememberSaveable{ mutableStateOf(false) }
@@ -85,11 +95,25 @@ private fun MainLayout(viewModel: SettingsViewModel, navController: NavControlle
                 stringResource(R.string.event_reminders_summary,
                     integerResource(R.integer.REMINDER_AMOUNT_HOURS_BEFORE_TIME_READY)) , remindersEnabled.value) { checked ->
 
+
                 if(checked){
-                    if(permissionManager.checkNotificationPermission() && permissionManager.checkAlarmPermission()){
+                    if(hasNotificationPermission.status.isGranted && viewModel.canScheduleExactAlarms()){
                         remindersEnabled.value = true
                         scope.launch { viewModel.setRemindersEnabled(context, true) }
-                    } else permissionManager.askForNotificationPermission(); permissionManager.askForAlarmPermission()
+                    }
+
+                    if(hasNotificationPermission.status.shouldShowRationale){
+                        remindersEnabled.value = false
+                        showNotificationPermissionNeeded.value = true
+                    } else if (!hasNotificationPermission.status.isGranted){
+                        remindersEnabled.value = false
+                        hasNotificationPermission.launchPermissionRequest()
+                    }
+
+                    if(!viewModel.canScheduleExactAlarms()){
+                        remindersEnabled.value = false
+                        showScheduleAlarmsPermissionNeeded.value = true
+                    }
                 } else {
                     remindersEnabled.value = false
                     scope.launch { viewModel.setRemindersEnabled(context, false) }
@@ -125,6 +149,29 @@ private fun MainLayout(viewModel: SettingsViewModel, navController: NavControlle
         }
     }
 
+    // NOTIFIACTION PERMISSION NEEDED
+    if(showNotificationPermissionNeeded.value){
+        AlertDialog(
+            onDismissRequest = {showNotificationPermissionNeeded.value = false},
+            title = { Text(stringResource(R.string.noificationDialog_permission_needed)) },
+            text = { Text(stringResource(R.string.noificationDialog_permission_needed_message)) },
+            dismissButton = { OutlinedButton(onClick = { showNotificationPermissionNeeded.value = false }) { Text(stringResource(R.string.cancel)) } },
+            confirmButton = { Button(onClick = { showNotificationPermissionNeeded.value = false; viewModel.openNotificationSettings() }) { Text(stringResource(R.string.settings)) } }
+        )
+    }
+
+    // SCHEDULE ALARMS PERMISSION NEEDED
+    if(showScheduleAlarmsPermissionNeeded.value){
+        AlertDialog(
+            onDismissRequest = {showScheduleAlarmsPermissionNeeded.value = false},
+            title = { Text(stringResource(R.string.schedule_exact_alarms_title)) },
+            text = { Text(stringResource(R.string.schedule_exact_alarms_message)) },
+            dismissButton = { OutlinedButton(onClick = { showScheduleAlarmsPermissionNeeded.value = false }) { Text(stringResource(R.string.cancel)) } },
+            confirmButton = { Button(onClick = { showScheduleAlarmsPermissionNeeded.value = false; viewModel.openExactAlarmSettings() }) { Text(stringResource(R.string.settings)) } }
+        )
+    }
+
+    // IMPORT DIALOG
     if(showImportDialog.value){
         AlertDialog(
             onDismissRequest = {showImportDialog.value = false},
@@ -142,7 +189,9 @@ private fun TopAppBar(viewModel: SettingsViewModel, context: Context, scrollBeha
     LargeTopAppBar(
         title = { Text(text = stringResource(R.string.settings)) },
         navigationIcon = {
-            Box (modifier = Modifier.size(dimensionResource(R.dimen.icon_button_size)).clickable { navController.popBackStack() },
+            Box (modifier = Modifier
+                .size(dimensionResource(R.dimen.icon_button_size))
+                .clickable { navController.popBackStack() },
                 contentAlignment = Alignment.Center){
                 Icon(painterResource(R.drawable.ic_back), "back")
             }

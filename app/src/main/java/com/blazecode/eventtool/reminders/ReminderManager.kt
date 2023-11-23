@@ -7,11 +7,15 @@
 package com.blazecode.eventtool.reminders
 
 import android.app.AlarmManager
+import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
+import android.provider.Settings
+import android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM
 import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.enums.EventType
@@ -53,11 +57,13 @@ class ReminderManager {
                 }
             Log.i("RECEIVER", "GAVE ${event}")
 
-            alarmManager?.setExact(
-                AlarmManager.RTC_WAKEUP,
-                LocalDateTime.of(event.date, event.timeReady).minusHours(HOURS_TO_SUBSTRACT).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
-                alarmIntent
-            )
+            if(alarmManager?.canScheduleExactAlarms() == true){
+                alarmManager?.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    LocalDateTime.of(event.date, event.timeReady).minusHours(HOURS_TO_SUBSTRACT).atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+                    alarmIntent
+                )
+            }
         }
     }
 }

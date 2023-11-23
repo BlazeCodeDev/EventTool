@@ -47,7 +47,6 @@ fun Search(viewModel: SearchViewModel = viewModel(), navController: NavControlle
 
         if(showEventDetails.value)
             EventDetails(
-                navController = navController,
                 printer = printer,
                 event = eventDetailsEvent.value,
                 onEdit = {

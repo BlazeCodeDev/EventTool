@@ -10,35 +10,36 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.database.DataBaseExporter
 import com.blazecode.eventtool.database.DataBaseImporter
 import com.blazecode.eventtool.navigation.NavRoutes
 import com.blazecode.eventtool.screens.*
 import com.blazecode.eventtool.ui.theme.EventToolTheme
-import com.blazecode.eventtool.util.PermissionManager
 import com.blazecode.eventtool.util.pdf.PdfPrinter
 import com.blazecode.eventtool.viewmodels.HomeViewModel
 import com.blazecode.eventtool.viewmodels.NewEventViewModel
 import com.blazecode.eventtool.viewmodels.SearchViewModel
 import com.blazecode.eventtool.viewmodels.SettingsViewModel
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.launch
 
 var errorDialogMessage = mutableStateOf("")
 var notificationTapEvent = mutableStateOf<Event?>(null)
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
 
         // HACKY WAY TO PREVENT WHITE SCREEN BETWEEN TRANSITIONS
         lifecycleScope.launch {
@@ -48,15 +49,13 @@ class MainActivity : ComponentActivity() {
         // GET EVENT IF TAPPED NOTIFICATION
         notificationTapEvent.value = intent.extras?.getParcelable("event", Event::class.java)
 
-        val permissionManager = PermissionManager(this)
-
         val exporter = DataBaseExporter(this)
         val importer = DataBaseImporter(this)
         val printer = PdfPrinter(this)
         // CONTENT
         setContent {
-            val navController = rememberAnimatedNavController()
-            AnimatedNavHost(navController = navController, startDestination = NavRoutes.Home.route) {
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = NavRoutes.Home.route) {
                 // HOME
                 composable(route= NavRoutes.Home.route,) { Home(HomeViewModel(application), navController, printer) }
                 // NEW EVENT
@@ -68,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 // SEARCH
                 composable(NavRoutes.Search.route) { Search(SearchViewModel(application), navController, printer) }
                 // SETTINGS
-                composable(NavRoutes.Settings.route){ Settings(SettingsViewModel(application), navController, permissionManager, exporter, importer) }
+                composable(NavRoutes.Settings.route){ Settings(SettingsViewModel(application), navController, exporter, importer) }
                 // OPEN SOURCE LICENSES
                 composable(NavRoutes.OpenSourceLicenses.route){ OpenSourceLicenses(navController) }
             }
