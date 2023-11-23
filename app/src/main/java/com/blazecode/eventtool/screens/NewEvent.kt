@@ -705,9 +705,7 @@ private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
             }.join()
 
             // CHECK FOR TOO MANY EVENTS
-            if (eventsOnDate.size >= 2) {
-                showTooManyEventsDialog.value = true
-            } else {
+            if (eventsOnDate.size < 2 || viewModel.editMode) {
                 // INPUT RULES
                 if((viewModel.event.date != LocalDate.now() && (viewModel.event.name.isNotEmpty() || viewModel.event.lastName.isNotEmpty()) &&
                             viewModel.event.venue.isNotEmpty() && (viewModel.event.email.isNotEmpty() || viewModel.event.phone.isNotEmpty())) ||
@@ -719,6 +717,8 @@ private fun SaveFAB(viewModel: NewEventViewModel, navController: NavController){
                 } else {
                     showErrorDialog.value = true
                 }
+            } else {
+                showTooManyEventsDialog.value = true
             }
 
             save.value = false
