@@ -81,7 +81,7 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:$accompanist_version")
 
     // CALENDAR
-    implementation("com.kizitonwose.calendar:compose:2.4.0")
+    implementation("com.kizitonwose.calendar:compose:2.5.0-alpha01")
 
     // NAVIGATION
     implementation("androidx.navigation:navigation-compose:2.7.5")
