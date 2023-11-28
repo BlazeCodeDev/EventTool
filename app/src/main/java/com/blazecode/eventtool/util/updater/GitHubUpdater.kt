@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,22 +23,30 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewModelScope
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.blazecode.eventtool.BuildConfig
 import com.blazecode.eventtool.R
+import com.blazecode.eventtool.database.DataBaseExporter
+import com.blazecode.eventtool.database.EventRepository
 import com.blazecode.scrapguidev2.util.LinkUtil
 import com.google.gson.GsonBuilder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun GitHubUpdater(context: Context) {
+fun GitHubUpdater(context: Context, exporter : DataBaseExporter) {
     val release = remember{ mutableStateOf(GitHubRelease("","", arrayListOf())) }
+    val scope = rememberCoroutineScope()
 
     val download = rememberSaveable{ mutableStateOf(false) }
+    val doBackup = rememberSaveable{ mutableStateOf(false) }
     val showDialog = rememberSaveable{ mutableStateOf(false) }
+    val showBackupDialog = rememberSaveable{ mutableStateOf(false) }
     val extendCard = rememberSaveable{ mutableStateOf(false) }
 
     fun parseJSON(input: String){
@@ -83,17 +92,24 @@ fun GitHubUpdater(context: Context) {
         var icon: Painter = painterResource(R.drawable.ic_expand_more)
         val showMoreIcon: Painter = painterResource(R.drawable.ic_expand_more)
         val showLessIcon: Painter = painterResource(R.drawable.ic_expand_less)
-        Card (modifier = Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.medium_padding))){
+        Card (modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(R.dimen.medium_padding))){
             Column {
                 Row (verticalAlignment = Alignment.CenterVertically){
-                    Text(modifier = Modifier.padding(dimensionResource(R.dimen.medium_padding)).weight(2f),
+                    Text(modifier = Modifier
+                        .padding(dimensionResource(R.dimen.medium_padding))
+                        .weight(2f),
                         text = stringResource(R.string.update_available, release.value.tag_name),
                         softWrap = true
                     )
 
-                    Box(modifier = Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.medium_padding)).weight(2f), contentAlignment = Alignment.CenterEnd){
+                    Box(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.medium_padding))
+                        .weight(2f), contentAlignment = Alignment.CenterEnd){
                         Row {
-                            Button(onClick = { download.value = true }) { Text(stringResource(R.string.download)) }
+                            Button(onClick = { showBackupDialog.value = true }) { Text(stringResource(R.string.download)) }
                             IconButton(onClick = {
                                 extendCard.value = !extendCard.value
                                 if(extendCard.value) icon = showLessIcon
@@ -109,7 +125,41 @@ fun GitHubUpdater(context: Context) {
         }
     }
 
+    if(showBackupDialog.value) {
+        AlertDialog(onDismissRequest = { showBackupDialog.value = false},
+            title = { Text(stringResource(R.string.backup_database_title)) },
+            text = { Text(stringResource(R.string.backup_database_message)) },
+            confirmButton = {
+                FilledTonalButton(onClick = { doBackup.value = true }) {
+                    Text(text = stringResource(R.string.backup_database_button))
+                }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { showBackupDialog.value = false; download.value = true }) {
+                    Text(text = stringResource(R.string.download_update))
+                }
+            })
+    }
+
+    LaunchedEffect(doBackup.value){
+        if(doBackup.value) {
+            scope.launch(Dispatchers.IO) {
+                export(scope, exporter, context)
+            }.join()
+        }
+    }
+
     if(download.value) {
+        download.value = false
         LinkUtil.Builder(context).link(release.value.assets[0].browser_download_url).open()
+    }
+}
+
+private fun export(scope: CoroutineScope, exporter: DataBaseExporter, context: Context){
+    val repository = EventRepository()
+
+    scope.launch(Dispatchers.IO) {
+        val list = repository.getEventList(context)
+        exporter.exportJson(context, list)
     }
 }

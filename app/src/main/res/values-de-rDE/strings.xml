@@ -105,6 +105,10 @@
     <string name="update_available">Update %s verfügbar</string>
     <string name="download">Herunterladen</string>
     <string name="reserved">Reserviert</string>
+    <string name="download_update">Update Herunterladen</string>
+    <string name="backup_database_title">Backup Datenbank</string>
+    <string name="backup_database_message">Erstelle ein Backup der Datenbank vor dem Aktualisieren</string>
+    <string name="backup_database_button">Backup</string>
     <string name="send">Senden</string>
     <string name="error_report_title">Ups, etwas ist schief gelaufen</string>
     <string name="error_user_comment">Kommentar</string>
