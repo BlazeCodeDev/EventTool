@@ -15,7 +15,7 @@ android {
         minSdk = 33
         targetSdk = 34
         versionCode = 20
-        versionName = "1.4.1"
+        versionName = "1.4.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,21 +46,21 @@ val aboutLibrariesVersion: String by rootProject.extra
 val composeVersion: String by rootProject.extra
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2023.10.01"))
+    implementation(platform("androidx.compose:compose-bom:2024.01.00"))
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.8.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.annotation:annotation:1.7.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.annotation:annotation:1.7.1")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -69,28 +69,28 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // ROOM DB
-    val room_version = "2.6.0"
+    val room_version = "2.6.1"
     implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
 
     // ACCOMPANIST
-    val accompanist_version = "0.33.2-alpha"
+    val accompanist_version = "0.34.0"
     implementation("com.google.accompanist:accompanist-flowlayout:$accompanist_version")
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist_version")
     implementation("com.google.accompanist:accompanist-permissions:$accompanist_version")
 
     // CALENDAR
-    implementation("com.kizitonwose.calendar:compose:2.5.0-alpha01")
+    implementation("com.kizitonwose.calendar:compose:2.5.0-beta01")
 
     // NAVIGATION
-    implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("androidx.navigation:navigation-compose:2.7.6")
 
     // GSON
     implementation("com.google.code.gson:gson:2.10.1")
 
     // LOTTIE
-    implementation("com.airbnb.android:lottie-compose:6.1.0")
+    implementation("com.airbnb.android:lottie-compose:6.3.0")
 
     //ABOUT LIBRARIES
     implementation("com.mikepenz:aboutlibraries-compose:$aboutLibrariesVersion")

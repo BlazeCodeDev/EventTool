@@ -40,6 +40,7 @@ import com.airbnb.lottie.compose.*
 import com.blazecode.eventtool.R
 import com.blazecode.eventtool.data.Event
 import com.blazecode.eventtool.data.EventDateType
+import com.blazecode.eventtool.database.DataBaseExporter
 import com.blazecode.eventtool.enums.Additions
 import com.blazecode.eventtool.enums.EventType
 import com.blazecode.eventtool.navigation.NavRoutes
@@ -78,9 +79,8 @@ private val colorfulDaysEnabled = mutableStateOf(false)
 private val debugUpdateCheckEnabled = mutableStateOf(false)
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Home(viewModel: HomeViewModel = viewModel(), navController: NavController, printer: PdfPrinter) {
+fun Home(viewModel: HomeViewModel = viewModel(), navController: NavController, printer: PdfPrinter, exporter :DataBaseExporter) {
     val context = LocalContext.current
 
     LaunchedEffect(context) {
@@ -119,7 +119,7 @@ fun Home(viewModel: HomeViewModel = viewModel(), navController: NavController, p
                 content = { paddingValues ->
                     Column(modifier = Modifier.padding(paddingValues)) {
                         if((debugUpdateCheckEnabled.value && com.blazecode.eventtool.BuildConfig.DEBUG) || !com.blazecode.eventtool.BuildConfig.DEBUG)
-                            GitHubUpdater(context)
+                            GitHubUpdater(exporter = exporter, context = context)
                         MainLayout(viewModel, navController)
                     }
                 })

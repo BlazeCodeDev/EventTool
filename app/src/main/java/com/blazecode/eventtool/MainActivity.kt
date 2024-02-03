@@ -57,7 +57,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = NavRoutes.Home.route) {
                 // HOME
-                composable(route= NavRoutes.Home.route,) { Home(HomeViewModel(application), navController, printer) }
+                composable(route= NavRoutes.Home.route,) { Home(HomeViewModel(application), navController, printer, exporter) }
                 // NEW EVENT
                 composable(NavRoutes.NewEvent.route) {
                     val event = navController.previousBackStackEntry?.savedStateHandle?.get<Event>("event")

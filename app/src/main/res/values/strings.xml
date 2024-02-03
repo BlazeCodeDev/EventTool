@@ -128,6 +128,10 @@
     <!-- UPDATE -->
     <string name="update_available">Update %s available</string>
     <string name="download">Download</string>
+    <string name="download_update">Download Update</string>
+    <string name="backup_database_title">Backup database</string>
+    <string name="backup_database_message">Backup your database before updating</string>
+    <string name="backup_database_button">Backup</string>
 
     <!-- ERROR REPORT -->
     <string name="send">Send</string>
